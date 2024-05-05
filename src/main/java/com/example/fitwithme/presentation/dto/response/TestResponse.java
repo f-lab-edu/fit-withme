@@ -8,3 +8,4 @@ public record TestResponse(Long id, String name, int age, String address) {
         return new TestResponse(test.id(), test.name(), test.age(), test.address());
     }
 }
+
