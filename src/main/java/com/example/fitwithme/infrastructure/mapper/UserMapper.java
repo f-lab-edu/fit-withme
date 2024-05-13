@@ -1,18 +1,18 @@
 package com.example.fitwithme.infrastructure.mapper;
 
-import com.example.fitwithme.domain.model.Test;
+import com.example.fitwithme.domain.model.User;
 import org.springframework.stereotype.Repository;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 @Repository
-public interface TestMapper {
+public interface UserMapper {
 
     // @Select(SELECT * FROM person WHERE id = #{id}") 으로 작성 가능. (보통 복잡한 쿼리만 xml 작성)
 
-    Test find(Long id);
+    User find(Long id);
 
-    int create(Test test);
+    int create(User user);
 
 
 }
