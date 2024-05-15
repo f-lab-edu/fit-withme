@@ -1,6 +1,7 @@
 package com.example.fitwithme.application.service;
 
 import com.example.fitwithme.domain.model.User;
+import com.example.fitwithme.infrastructure.dao.UserDao;
 import com.example.fitwithme.infrastructure.mapper.UserMapper;
 import com.example.fitwithme.jwt.JwtUtil;
 import com.example.fitwithme.presentation.dto.request.UserRequest;
@@ -12,21 +13,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
-    private final UserMapper userMapper;
+    private final UserDao userDao;
+    private final JwtUtil jwtUtil;
 
-    public UserService(UserMapper userMapper) {
-        this.userMapper = userMapper;
+    public UserService(UserDao userDao, JwtUtil jwtUtil) {
+        this.userDao = userDao;
+        this.jwtUtil = jwtUtil;
     }
 
-   @Value("${jwt.secret}")
-    private String secretKey;
-
-    private Long expiredMs = 1000 * 60 * 60l;
-
-    public String login(UserRequest userRequest){
-        String userId = userRequest.getUserId();
-        String userPassword = userRequest.getUserPassword();
-        return JwtUtil.createJwt(userId, userPassword, secretKey, expiredMs);
+    @Transactional
+    public String login(UserRequest.login loginRequest) {
+        String userId = loginRequest.getUserId();
+        User user = userDao.findById(loginRequest.getUserId());
+        //비밀번호 확인 등의 유효성 검사 진행
+        return jwtUtil.createToken(user.userId());
     }
 }
 

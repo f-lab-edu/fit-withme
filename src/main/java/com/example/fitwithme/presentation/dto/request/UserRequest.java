@@ -1,6 +1,7 @@
 package com.example.fitwithme.presentation.dto.request;
 
 import com.example.fitwithme.domain.model.User;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,18 +11,27 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserRequest {
 
-    private String userId;
+//    private String userId;
+//
+//    private String userPassword;
+//
+//    private String userName;
+//
+//    private String email;
+//
+//    private String phone;
 
-    private String userPassword;
 
-    private String userName;
+    @Getter
+    @AllArgsConstructor
+    public static class login {
 
-    private String email;
+        @NotBlank(message = "아이디를 입력해 주세요.")
+        private String userId;
 
-    private String phone;
+        @NotBlank(message = "비밀번호를 입력해 주세요.")
+        private String userPassword;
 
-    public User toDomain() {
-        return new User(userId, userPassword, userName, email, phone);
     }
 }
 
