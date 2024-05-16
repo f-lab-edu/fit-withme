@@ -12,5 +12,6 @@ mybatis:
     map-underscore-to-camel-case: true
 jwt:
   secret: 416121614c82955cf630865a448092662176cdf0da5294702711628d694a0b64
-  expire-length: 3600000
+  accessTokenValidity: 3600
+  refreshTokenValidity: 7200
 

@@ -4,6 +4,7 @@ import com.example.fitwithme.application.service.UserService;
 import com.example.fitwithme.presentation.dto.request.UserRequest;
 import com.example.fitwithme.presentation.dto.response.UserResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,9 +18,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponse> login(@RequestBody UserRequest.login userRequest) {
-        String token = userService.login(userRequest);
-        return ResponseEntity.ok().body(new UserResponse(token, "bearer"));
+    public ResponseEntity<UserResponse> login(@Validated @RequestBody UserRequest.login userRequest) {
+        UserResponse token = userService.login(userRequest);
+        return ResponseEntity.ok().body(token);
     }
 }
 

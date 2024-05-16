@@ -1,5 +1,6 @@
 package com.example.fitwithme.jwt;
 
+import com.example.fitwithme.presentation.dto.response.UserResponse;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -10,33 +11,55 @@ import java.util.Date;
 @Component
 public class JwtUtil {
     private String secretKey;
-    private long validityInMilliseconds;
+    private long accessTokenValidity;
+    private long refreshTokenValidity;
 
-    public JwtUtil(@Value("${jwt.secret}") String secretKey, @Value("${jwt.expire-length}") long validityInMilliseconds) {
+    public JwtUtil(@Value("${jwt.secret}") String secretKey, @Value("${jwt.accessTokenValidity}") long accessTokenValidity, @Value("${jwt.refreshTokenValidity}")long refreshTokenValidity) {
         this.secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
-        this.validityInMilliseconds = validityInMilliseconds;
+        this.accessTokenValidity = accessTokenValidity;
+        this.refreshTokenValidity = refreshTokenValidity;
     }
 
     //토큰생성
-    public String createToken(String subject) {
-        Claims claims = Jwts.claims().setSubject(subject);
+    public UserResponse generateTokens(String userId) {
+        String accessToken = createAccessToken(userId);
+        String refreshToken = createRefreshToken(userId);
 
-        Date now = new Date();
+        UserResponse tokenInfo = UserResponse.builder()
+                .grantType("Bearer")
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
 
-        Date validity = new Date(now.getTime()
-                + validityInMilliseconds);
+        return tokenInfo;
+    }
+
+    private String createAccessToken(String userId) {
+        Claims claims = Jwts.claims();
+        claims.put("userId", userId);
+        claims.put("type", "Access");
 
         return Jwts.builder()
                 .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(validity)
+                .setSubject("AccessToken")
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + accessTokenValidity))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 
-    //토큰에서 값 추출
-    public String getSubject(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+    private String createRefreshToken(String userId) {
+        Claims claims = Jwts.claims();
+        claims.put("userId", userId);
+        claims.put("type", "Refresh");
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject("RefreshToken")
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + refreshTokenValidity))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
     }
 
     //유효한 토큰인지 확인

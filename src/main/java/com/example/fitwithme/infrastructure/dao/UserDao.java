@@ -1,5 +1,7 @@
 package com.example.fitwithme.infrastructure.dao;
 
+import com.example.fitwithme.common.exception.ErrorStatus;
+import com.example.fitwithme.common.exception.NotFoundException;
 import com.example.fitwithme.domain.model.User;
 import com.example.fitwithme.infrastructure.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,7 @@ public class UserDao {
         try {
             return userMapper.findById(loginId);
         } catch (EmptyResultDataAccessException e) {
-            throw new BadRequestException(NOT_FOUND_USER);
+            throw new NotFoundException(ErrorStatus.NOT_FOUND_USER);
         }
     }
 }

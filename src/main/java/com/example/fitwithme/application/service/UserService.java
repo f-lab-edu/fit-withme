@@ -1,5 +1,7 @@
 package com.example.fitwithme.application.service;
 
+import com.example.fitwithme.common.exception.ErrorStatus;
+import com.example.fitwithme.common.exception.NotFoundException;
 import com.example.fitwithme.domain.model.User;
 import com.example.fitwithme.infrastructure.dao.UserDao;
 import com.example.fitwithme.infrastructure.mapper.UserMapper;
@@ -22,11 +24,14 @@ public class UserService {
     }
 
     @Transactional
-    public String login(UserRequest.login loginRequest) {
+    public UserResponse login(UserRequest.login loginRequest) {
         String userId = loginRequest.getUserId();
-        User user = userDao.findById(loginRequest.getUserId());
-        //비밀번호 확인 등의 유효성 검사 진행
-        return jwtUtil.createToken(user.userId());
+        User user = userDao.findById(userId);
+        //비밀번호 확인
+        if(!loginRequest.getUserPassword().equals(user.userPassword())){
+            throw new NotFoundException(ErrorStatus.WRONG_PASSWORD);
+        }
+        return jwtUtil.generateTokens(user.userId());
     }
 }
 
