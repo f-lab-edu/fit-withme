@@ -2,7 +2,7 @@ server:
   port: 8080
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/fitwithme?useSSL=false
+    url: jdbc:mysql://localhost:3306/fitwithme?useSSL=false&allowPublicKeyRetrieval=true
     driverClassName: com.mysql.cj.jdbc.Driver
     username: root
     password: root
