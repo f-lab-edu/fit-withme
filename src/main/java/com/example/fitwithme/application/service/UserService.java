@@ -27,10 +27,15 @@ public class UserService {
 
     @Transactional
     public UserResponse login(UserRequest.login loginRequest) {
+        if (loginRequest.getUserId() == null || loginRequest.getUserPassword() == null || loginRequest.getUserId().isEmpty() || loginRequest.getUserPassword().isEmpty()){
+            throw new NotFoundException(ErrorStatus.NOT_INPUT);
+        }
         String userId = loginRequest.getUserId();
         User user = userDao.findById(userId);
-        log.info("loginRequest : " + loginRequest.getUserPassword());
-        log.info("user : " + user);
+        //아이디 존재 확인
+        if(user == null){
+            throw new NotFoundException(ErrorStatus.NOT_FOUND_USER);
+        }
         //비밀번호 확인
         if(!loginRequest.getUserPassword().equals(user.userPassword())){
             throw new NotFoundException(ErrorStatus.WRONG_PASSWORD);
