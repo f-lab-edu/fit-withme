@@ -12,8 +12,8 @@ public interface UserMapper {
     // @Select(SELECT * FROM person WHERE id = #{id}") 으로 작성 가능. (보통 복잡한 쿼리만 xml 작성)
 
 
-    @Select("SELECT * FROM users WHERE user_id = #{userId}")
-    User findById(String userId);
+    @Select("SELECT * FROM users WHERE user_id = #{id}")
+    User findById(String id);
 
 
 }

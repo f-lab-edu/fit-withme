@@ -12,6 +12,5 @@ public class UserResponse {
     private String accessToken;
     private String refreshToken;
 
-
 }
 

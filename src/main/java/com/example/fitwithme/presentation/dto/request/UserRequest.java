@@ -10,23 +10,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserRequest {
 
-//    private String userId;
-//
-//    private String userPassword;
-//
-//    private String userName;
-//
-//    private String email;
-//
-//    private String phone;
-
 
     @Getter
     @AllArgsConstructor
     public static class login {
 
+        @NotBlank(message = "아이디를 입력해주세요.")
         private String userId;
 
+        @NotBlank(message = "비밀번호를 입력해주세요.")
         private String userPassword;
 
     }

@@ -1,5 +1,6 @@
 package com.example.fitwithme.jwt;
 
+import com.example.fitwithme.common.enums.TokenType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +18,8 @@ public class JwtInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws IOException {
 
-        String accessToken = request.getHeader("ACCESS_TOKEN");
-        System.out.println("AccessToken:" + accessToken);
-        String refreshToken = request.getHeader("REFRESH_TOKEN");
-        System.out.println("RefreshToken:" + refreshToken);
+        String accessToken = request.getHeader(TokenType.ACCESS_TOKEN.toString());
+        String refreshToken = request.getHeader(TokenType.REFRESH_TOKEN.toString());
 
         if (accessToken != null) {
             if (jwtUtil.validateToken(accessToken)) {
@@ -28,9 +27,8 @@ public class JwtInterceptor implements HandlerInterceptor {
             }
         }
         response.setStatus(401);
-        response.setHeader("ACCESS_TOKEN", accessToken);
-        response.setHeader("REFRESH_TOKEN", refreshToken);
-        response.setHeader("msg", "Check the tokens.");
+        response.setHeader(TokenType.ACCESS_TOKEN.toString(), accessToken);
+        response.setHeader(TokenType.REFRESH_TOKEN.toString(), refreshToken);
         return false;
     }
 

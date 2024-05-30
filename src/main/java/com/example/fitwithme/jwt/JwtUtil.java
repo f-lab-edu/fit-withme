@@ -62,7 +62,6 @@ public class JwtUtil {
                 .compact();
     }
 
-    //유효한 토큰인지 확인
     public boolean validateToken(String token) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
