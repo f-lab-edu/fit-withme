@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserRequest {
 
-
     @Getter
     @AllArgsConstructor
     public static class login {
@@ -23,4 +22,3 @@ public class UserRequest {
 
     }
 }
-

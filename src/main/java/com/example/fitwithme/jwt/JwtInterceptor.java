@@ -25,7 +25,16 @@ public class JwtInterceptor implements HandlerInterceptor {
             if (jwtUtil.validateToken(accessToken)) {
                 return true;
             }
+        }else {
+            if (refreshToken != null && jwtUtil.validateToken(refreshToken)) {
+                String newAccessToken = jwtUtil.refreshAccessToken(refreshToken);
+                if (newAccessToken != null) {
+                    response.setHeader(TokenType.ACCESS_TOKEN.toString(), newAccessToken);
+                    return true;
+                }
+            }
         }
+
         response.setStatus(401);
         response.setHeader(TokenType.ACCESS_TOKEN.toString(), accessToken);
         response.setHeader(TokenType.REFRESH_TOKEN.toString(), refreshToken);

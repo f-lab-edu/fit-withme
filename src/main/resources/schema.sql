@@ -1,14 +1,15 @@
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
-    user_id   varchar(20)   NOT NULL,
+    id BIGINT AUTO_INCREMENT NOT NULL,
+    user_id   varchar(20)   NULL,
     user_name   varchar(20)   NULL,
     user_password   varchar(20)   NULL,
     email   varchar(50)   NULL,
     phone   char(11)   NULL,
     delete_at   char(1)   NULL,
 
-    PRIMARY KEY (user_id)
+    PRIMARY KEY (id)
 );
 
 DROP TABLE IF EXISTS center;

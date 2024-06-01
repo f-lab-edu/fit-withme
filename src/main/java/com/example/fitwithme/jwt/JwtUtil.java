@@ -20,7 +20,6 @@ public class JwtUtil {
         this.refreshTokenValidity = refreshTokenValidity;
     }
 
-    //토큰생성
     public UserResponse generateTokens(String userId) {
         String accessToken = createAccessToken(userId);
         String refreshToken = createRefreshToken(userId);
@@ -60,6 +59,19 @@ public class JwtUtil {
                 .setExpiration(new Date(System.currentTimeMillis() + refreshTokenValidity))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
+    }
+
+    public String refreshAccessToken(String refreshToken) {
+        if (validateToken(refreshToken)) {
+            Claims claims = getClaimsFromToken(refreshToken);
+            String userId = claims.get("userId", String.class);
+            return createAccessToken(userId);
+        }
+        return null;
+    }
+
+    private Claims getClaimsFromToken(String token) {
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
     }
 
     public boolean validateToken(String token) {

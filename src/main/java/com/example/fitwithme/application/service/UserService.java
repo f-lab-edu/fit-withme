@@ -22,7 +22,6 @@ public class UserService {
     private final UserDao userDao;
     private final JwtUtil jwtUtil;
 
-
     @Transactional
     public UserResponse login(UserRequest.login loginRequest) {
 
@@ -39,6 +38,3 @@ public class UserService {
         return jwtUtil.generateTokens(user.userId());
     }
 }
-
-
-
