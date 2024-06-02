@@ -1,34 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.fitwithme.infrastructure.mapper.UserMapper">
-  <select id="find" parameterType="Long" resultType="com.example.fitwithme.domain.model.User">
-    SELECT
-      id,
-      name,
-      age,
-      address
-    FROM
-      person
-    WHERE
-      id = #{id}
-  </select>
 
-
-  <insert id="create" parameterType="com.example.fitwithme.domain.model.User" >
+  <insert id="create" parameterType="com.example.fitwithme.domain.model.User">
     INSERT INTO
       users
     (
-      id,
-      name,
-      age,
-      address
+      user_id,
+      user_name,
+      user_password,
+      email,
+      phone,
+      delete_at
     )
     VALUES
       (
-        #{id},
-        #{name},
-        #{age},
-        #{address}
+        #{userId},
+        #{userName},
+        #{userPassword},
+        #{email},
+        #{phone},
+        'N'
       )
   </insert>
 </mapper>

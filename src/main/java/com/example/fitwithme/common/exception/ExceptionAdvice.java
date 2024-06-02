@@ -12,8 +12,8 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class ExceptionAdvice {
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException ex) {
+    @ExceptionHandler(WrongRequestException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundException(WrongRequestException ex) {
         ErrorResponse errorResponse = new ErrorResponse(ex.getStatus().getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }

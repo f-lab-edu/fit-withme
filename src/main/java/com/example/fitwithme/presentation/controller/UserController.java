@@ -7,7 +7,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,5 +21,22 @@ public class UserController {
         UserResponse token = userService.login(userRequest);
         return ResponseEntity.ok().body(token);
     }
+
+    @GetMapping("/check-duplicateId/{userId}")
+    public ResponseEntity<Boolean> checkDuplicateId(@PathVariable String userId) {
+        boolean isAvailable = userService.isUserIdAvailable(userId);
+        return ResponseEntity.ok(isAvailable);
+    }
+
+    @PostMapping("/signUp")
+    public ResponseEntity<String> signIn(@Valid @RequestBody UserRequest.signUp userRequest){
+        if (!userService.isUserIdAvailable(userRequest.getUserId())) {
+            return ResponseEntity.badRequest().body("아이디 중복 확인을 완료해주세요.");
+        }
+
+        String userName = userService.signUp(userRequest);
+        return ResponseEntity.ok(userName + "님 가입을 축하드립니다!");
+    }
+
 }
 

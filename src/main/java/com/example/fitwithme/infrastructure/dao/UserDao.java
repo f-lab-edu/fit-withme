@@ -1,14 +1,11 @@
 package com.example.fitwithme.infrastructure.dao;
 
 import com.example.fitwithme.common.exception.ErrorStatus;
-import com.example.fitwithme.common.exception.NotFoundException;
+import com.example.fitwithme.common.exception.WrongRequestException;
 import com.example.fitwithme.domain.model.User;
 import com.example.fitwithme.infrastructure.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.dao.QueryTimeoutException;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -20,7 +17,21 @@ public class UserDao {
         try {
             return userMapper.findById(userId);
         } catch (EmptyResultDataAccessException e) {
-            throw new NotFoundException(ErrorStatus.NOT_FOUND_USER);
+            throw new WrongRequestException(ErrorStatus.NOT_FOUND_USER);
         }
+    }
+
+    public User create(User user) {
+        int result = userMapper.create(user);
+
+        if(result == 0){
+            throw new WrongRequestException(ErrorStatus.SIGNUP_FAIL);
+        }
+
+        return userMapper.findById(user.userId());
+    }
+
+    public boolean existsByUserId(String userId) {
+        return userMapper.existsByUserId(userId) > 0;
     }
 }
