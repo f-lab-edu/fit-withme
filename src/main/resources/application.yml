@@ -1,2 +1,17 @@
-spring.application.name=fit-withme
+server:
+  port: 8080
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/fitwithme?useSSL=false&allowPublicKeyRetrieval=true
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+jwt:
+  secret: ${JWT_SECRET_KEY}
+  accessTokenValidity: 3600
+  refreshTokenValidity: 7200
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.mybatispractice.infrastructure.mapper.PersonMapper">
-  <select id="find" parameterType="Long" resultType="com.example.mybatispractice.domain.model.Person">
+<mapper namespace="com.example.fitwithme.infrastructure.mapper.UserMapper">
+  <select id="find" parameterType="Long" resultType="com.example.fitwithme.domain.model.User">
     SELECT
       id,
       name,
@@ -14,9 +14,9 @@
   </select>
 
 
-  <insert id="create" parameterType="com.example.mybatispractice.domain.model.Person" >
+  <insert id="create" parameterType="com.example.fitwithme.domain.model.User" >
     INSERT INTO
-      person
+      users
     (
       id,
       name,
@@ -24,11 +24,11 @@
       address
     )
     VALUES
-    (
-      #{id},
-      #{name},
-      #{age},
-      #{address}
-    )
+      (
+        #{id},
+        #{name},
+        #{age},
+        #{address}
+      )
   </insert>
 </mapper>
