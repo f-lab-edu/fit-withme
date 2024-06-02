@@ -16,7 +16,7 @@
 
   <insert id="create" parameterType="com.example.fitwithme.domain.model.User" >
     INSERT INTO
-      person
+      users
     (
       id,
       name,

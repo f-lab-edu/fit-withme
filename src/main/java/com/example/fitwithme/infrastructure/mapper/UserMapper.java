@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Repository
 public interface UserMapper {
 
-    @Select("SELECT * FROM users WHERE user_id = #{id}")
-    User findById(String id);
+    @Select("SELECT * FROM users WHERE user_id = #{userId}")
+    User findById(String userId);
 
 }
