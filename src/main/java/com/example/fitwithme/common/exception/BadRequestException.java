@@ -1,9 +1,9 @@
 package com.example.fitwithme.common.exception;
 
-public class WrongRequestException extends RuntimeException{
+public class BadRequestException extends RuntimeException{
     private final ErrorStatus status;
 
-    public WrongRequestException(ErrorStatus status) {
+    public BadRequestException(ErrorStatus status) {
         super(status.getMessage());
         this.status = status;
     }

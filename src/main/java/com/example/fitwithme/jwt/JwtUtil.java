@@ -20,11 +20,11 @@ public class JwtUtil {
         this.refreshTokenValidity = refreshTokenValidity;
     }
 
-    public UserResponse generateTokens(String userId) {
+    public UserResponse.tokenInfo generateTokens(String userId) {
         String accessToken = createAccessToken(userId);
         String refreshToken = createRefreshToken(userId);
 
-        UserResponse tokenInfo = UserResponse.builder()
+        UserResponse.tokenInfo tokenInfo = UserResponse.tokenInfo.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)

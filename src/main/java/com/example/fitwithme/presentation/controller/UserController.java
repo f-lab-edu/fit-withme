@@ -17,8 +17,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponse> login(@Valid @RequestBody UserRequest.login userRequest) {
-        UserResponse token = userService.login(userRequest);
+    public ResponseEntity<UserResponse.tokenInfo> login(@Valid @RequestBody UserRequest.login userRequest) {
+        UserResponse.tokenInfo token = userService.login(userRequest);
         return ResponseEntity.ok().body(token);
     }
 
@@ -35,7 +35,7 @@ public class UserController {
         }
 
         String userName = userService.signUp(userRequest);
-        return ResponseEntity.ok(userName + "님 가입을 축하드립니다!");
+        return ResponseEntity.ok(userName);
     }
 
 }

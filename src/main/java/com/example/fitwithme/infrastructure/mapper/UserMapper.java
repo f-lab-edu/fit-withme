@@ -14,6 +14,6 @@ public interface UserMapper {
 
     int create(User user);
 
-    @Select("SELECT COUNT(*) FROM users WHERE user_id = #{userId} and delete_at = 'N'")
-    int existsByUserId(String userId);
+    @Select("SELECT EXISTS(SELECT 1 FROM users WHERE user_id = #{userId})")
+    boolean existsByUserId(String userId);
 }
