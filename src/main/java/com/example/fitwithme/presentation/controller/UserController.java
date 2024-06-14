@@ -7,7 +7,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,9 +17,22 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponse> login(@Valid @RequestBody UserRequest.login userRequest) {
-        UserResponse token = userService.login(userRequest);
+    public ResponseEntity<UserResponse.tokenInfo> login(@Valid @RequestBody UserRequest.login userRequest) {
+        UserResponse.tokenInfo token = userService.login(userRequest);
         return ResponseEntity.ok().body(token);
     }
+
+    @GetMapping("/check-duplicateId/{userId}")
+    public ResponseEntity<Boolean> checkDuplicateId(@PathVariable String userId) {
+        boolean isAvailable = userService.isUserIdAvailable(userId);
+        return ResponseEntity.ok(isAvailable);
+    }
+
+    @PostMapping("/signUp")
+    public ResponseEntity<String> signUp(@Valid @RequestBody UserRequest.signUp userRequest){
+        String userName = userService.signUp(userRequest);
+        return ResponseEntity.ok(userName);
+    }
+
 }
 

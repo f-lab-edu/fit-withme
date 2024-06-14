@@ -1,9 +1,9 @@
 package com.example.fitwithme.common.exception;
 
-public class NotFoundException extends RuntimeException{
+public class BadRequestException extends RuntimeException{
     private final ErrorStatus status;
 
-    public NotFoundException(ErrorStatus status) {
+    public BadRequestException(ErrorStatus status) {
         super(status.getMessage());
         this.status = status;
     }

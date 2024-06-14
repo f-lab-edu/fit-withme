@@ -9,7 +9,11 @@ import org.apache.ibatis.annotations.Mapper;
 @Repository
 public interface UserMapper {
 
-    @Select("SELECT * FROM users WHERE user_id = #{userId}")
+    @Select("SELECT * FROM users WHERE user_id = #{userId} and delete_at = 'N'")
     User findById(String userId);
 
+    int create(User user);
+
+    @Select("SELECT EXISTS(SELECT 1 FROM users WHERE user_id = #{userId})")
+    boolean existsByUserId(String userId);
 }
