@@ -30,7 +30,7 @@ public class UserDao {
                 throw new BadRequestException(ErrorStatus.SIGNUP_FAIL);
             }
 
-            return userMapper.findById(user.userId());
+            return user;
         } catch (DuplicateKeyException e) {
             throw new BadRequestException(ErrorStatus.DUPLICATE_ID);
         }

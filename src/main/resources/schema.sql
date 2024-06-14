@@ -7,7 +7,7 @@ CREATE TABLE users (
     user_password   varchar(20)   NULL,
     email   varchar(50)   NULL,
     phone   char(13)   NULL,
-    delete_at   char(1)   NULL,
+    delete_at   tinyint(1)   NULL,
 
     PRIMARY KEY (id)
 );
@@ -41,7 +41,7 @@ CREATE TABLE inquiry (
      inq_contents   text   NULL,
      user_id   varchar(20)   NULL,
      regist_dt   date   NULL,
-     delete_at   char(1)   NULL,
+     delete_at   tinyint(1)   NULL,
 
      PRIMARY KEY (inq_sn)
 );
@@ -82,7 +82,7 @@ CREATE TABLE review (
     user_id   varchar(20)   NULL,
     review_contents   text   NULL,
     regist_dt   date   NULL,
-    delete_at   char(1)   NULL,
+    delete_at   tinyint(1)   NULL,
 
     PRIMARY KEY (review_sn)
 );
@@ -107,7 +107,7 @@ CREATE TABLE reserve (
     lesson_sn   int   NULL,
     user_id   varchar(20)   NULL,
     reserve_date   date   NULL,
-    cancel_at   char(1)   NULL,
+    cancel_at   tinyint(1)   NULL,
 
     PRIMARY KEY (reserve_sn)
 );

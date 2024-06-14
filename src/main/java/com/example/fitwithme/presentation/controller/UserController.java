@@ -30,10 +30,6 @@ public class UserController {
 
     @PostMapping("/signUp")
     public ResponseEntity<String> signIn(@Valid @RequestBody UserRequest.signUp userRequest){
-        if (!userService.isUserIdAvailable(userRequest.getUserId())) {
-            return ResponseEntity.badRequest().body("아이디 중복 확인을 완료해주세요.");
-        }
-
         String userName = userService.signUp(userRequest);
         return ResponseEntity.ok(userName);
     }

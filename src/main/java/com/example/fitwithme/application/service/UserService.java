@@ -9,6 +9,7 @@ import com.example.fitwithme.presentation.dto.request.UserRequest;
 import com.example.fitwithme.presentation.dto.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +39,9 @@ public class UserService {
 
     @Transactional
     public String signUp(UserRequest.signUp userRequest) {
+        if (!isUserIdAvailable(userRequest.getUserId())) {
+            throw new BadRequestException(ErrorStatus.CHECK_DUPLICATE_ID);
+        }
 
         User user = userRequest.toDomain();
         User result = userDao.create(user);

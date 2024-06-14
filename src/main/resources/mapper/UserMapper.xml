@@ -20,7 +20,7 @@
         #{userPassword},
         #{email},
         #{phone},
-        'N'
+        0
       )
   </insert>
 </mapper>
