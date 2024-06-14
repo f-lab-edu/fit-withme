@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping("/signUp")
-    public ResponseEntity<String> signIn(@Valid @RequestBody UserRequest.signUp userRequest){
+    public ResponseEntity<String> signUp(@Valid @RequestBody UserRequest.signUp userRequest){
         String userName = userService.signUp(userRequest);
         return ResponseEntity.ok(userName);
     }
