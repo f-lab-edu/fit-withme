@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.fitwithme.infrastructure.mapper.LessonMapper">
+
+  <select id="getLessonList" parameterType="string" resultType="com.example.fitwithme.domain.model.Lesson">
+    SELECT
+        L.LESSON_SN
+        ,(SELECT CONCAT(C.CENTER_NAME, ' ', C.CENTER_LOCATION, '점') FROM CENTER C WHERE C.CENTER_SN = L.CENTER_SN) AS CENTER
+        ,L.LESSON_NAME
+        ,(SELECT I.INSTRUCTOR_NAME FROM INSTRUCTOR I WHERE I.INSTRUCTOR_SN = L.INSTRUCTOR_SN) AS INSTRUCTOR_NAME
+        ,(SELECT COUNT(*) FROM RESERVE R WHERE R.LESSON_SN = l.lesson_sn AND r.RESERVE_DATE = #{selectDate} AND r.CANCEL_AT = 0) AS curr_personnel
+        ,L.PERSONNEL
+        ,L.LESSON_DAY
+        ,L.START_TIME
+        ,L.END_TIME
+    FROM
+        LESSON L
+    WHERE
+        L.LESSON_DAY LIKE CONCAT('%', #{day}, '%')
+  </select>
+</mapper>

@@ -12,6 +12,6 @@ mybatis:
     map-underscore-to-camel-case: true
 jwt:
   secret: ${JWT_SECRET_KEY}
-  accessTokenValidity: 3600
-  refreshTokenValidity: 7200
+  accessTokenValidity: 3600000
+  refreshTokenValidity: 86400000
 

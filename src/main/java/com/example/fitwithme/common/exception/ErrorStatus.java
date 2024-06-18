@@ -6,7 +6,9 @@ public enum ErrorStatus {
     WRONG_PASSWORD("비밀번호가 올바르지 않습니다."),
     DUPLICATE_ID("중복되는 아이디입니다."),
     CHECK_DUPLICATE_ID("아이디 중복 확인을 완료해주세요."),
-    SIGNUP_FAIL("회원가입에 실패했습니다.");
+    SIGNUP_FAIL("회원가입에 실패했습니다."),
+    NOT_FOUND_LESSONLIST("해당 날짜에 수업이 없습니다."),
+    NOT_FOUND_LESSON("수업 정보를 찾을 수 없습니다.");
 
     private final String message;
 
