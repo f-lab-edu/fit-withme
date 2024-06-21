@@ -85,4 +85,9 @@ public class JwtUtil {
             return false;
         }
     }
+
+    public String getUserIdFromToken(String token) {
+        Claims claims = getClaimsFromToken(token);
+        return claims.get("userId", String.class);
+    }
 }

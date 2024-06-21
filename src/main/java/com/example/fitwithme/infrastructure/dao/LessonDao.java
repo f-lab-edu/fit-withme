@@ -3,6 +3,7 @@ package com.example.fitwithme.infrastructure.dao;
 import com.example.fitwithme.common.exception.BadRequestException;
 import com.example.fitwithme.common.exception.ErrorStatus;
 import com.example.fitwithme.domain.model.Lesson;
+import com.example.fitwithme.domain.model.Reserve;
 import com.example.fitwithme.domain.model.User;
 import com.example.fitwithme.infrastructure.mapper.LessonMapper;
 import com.example.fitwithme.infrastructure.mapper.UserMapper;
@@ -33,6 +34,24 @@ public class LessonDao {
             return lessonMapper.getLessonData(request);
         } catch (EmptyResultDataAccessException e) {
             throw new BadRequestException(ErrorStatus.NOT_FOUND_LESSON);
+        }
+    }
+
+    public Long create(LessonRequest.reserve request) {
+        Long result = lessonMapper.create(request);
+
+        return result;
+    }
+
+    public int cancel(int reserveSn) {
+        return lessonMapper.cancel(reserveSn);
+    }
+
+    public List<Reserve> getReserveList(LessonRequest.reserveList reserveList) {
+        try {
+            return lessonMapper.getReserveList(reserveList);
+        } catch (EmptyResultDataAccessException e) {
+            throw new BadRequestException(ErrorStatus.NOT_FOUND_RESERVEIST);
         }
     }
 }

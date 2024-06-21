@@ -8,7 +8,8 @@ public enum ErrorStatus {
     CHECK_DUPLICATE_ID("아이디 중복 확인을 완료해주세요."),
     SIGNUP_FAIL("회원가입에 실패했습니다."),
     NOT_FOUND_LESSONLIST("해당 날짜에 수업이 없습니다."),
-    NOT_FOUND_LESSON("수업 정보를 찾을 수 없습니다.");
+    NOT_FOUND_LESSON("수업 정보를 찾을 수 없습니다."),
+    NOT_FOUND_RESERVEIST("예약한 수업이 없습니다.");
 
     private final String message;
 

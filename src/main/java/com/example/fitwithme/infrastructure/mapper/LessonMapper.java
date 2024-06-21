@@ -1,6 +1,7 @@
 package com.example.fitwithme.infrastructure.mapper;
 
 import com.example.fitwithme.domain.model.Lesson;
+import com.example.fitwithme.domain.model.Reserve;
 import com.example.fitwithme.domain.model.User;
 import com.example.fitwithme.presentation.dto.request.LessonRequest;
 import org.apache.ibatis.annotations.Mapper;
@@ -14,15 +15,13 @@ import java.util.Map;
 @Repository
 public interface LessonMapper {
 
-    @Select("SELECT * FROM users WHERE user_id = #{userId} and delete_at = 'N'")
-    User findById(String userId);
-
-    int create(User user);
-
-    @Select("SELECT EXISTS(SELECT 1 FROM users WHERE user_id = #{userId})")
-    boolean existsByUserId(String userId);
-
     List<Lesson> getLessonList(String selectDate, String day);
 
     Lesson getLessonData(LessonRequest.detail request);
+
+    Long create(LessonRequest.reserve request);
+
+    int cancel(int reserveSn);
+
+    List<Reserve> getReserveList(LessonRequest.reserveList reserveList);
 }

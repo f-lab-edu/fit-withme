@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @Getter
@@ -18,9 +19,34 @@ public class LessonRequest {
     public static class detail {
 
         private String selectDate;
-
         private String lessonSn;
 
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class reserve {
+
+        private String lessonSn;
+        private String userId;
+        private String selectDate;
+        private Long reserveSn;
+        private String status;
+
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class reserveList {
+
+        private String today;
+        private String userId;
+
+        public reserveList() {
+
+        }
     }
 
 }
