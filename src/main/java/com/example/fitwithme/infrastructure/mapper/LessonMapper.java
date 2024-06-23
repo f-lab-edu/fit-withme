@@ -15,13 +15,13 @@ import java.util.Map;
 @Repository
 public interface LessonMapper {
 
-    List<Lesson> getLessonList(String selectDate, String day);
+    List<Lesson> findLessons(String selectDate, String day);
 
-    Lesson getLessonData(LessonRequest.detail request);
+    Lesson findLessonDetail(LessonRequest.detail request);
 
     Long create(LessonRequest.reserve request);
 
-    int cancel(int reserveSn);
+    int cancel(int reserveId);
 
-    List<Reserve> getReserveList(LessonRequest.reserveList reserveList);
+    List<Reserve> findReserveLessons(LessonRequest.reserveList reserveList);
 }

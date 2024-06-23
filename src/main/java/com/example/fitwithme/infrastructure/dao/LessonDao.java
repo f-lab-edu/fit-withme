@@ -21,17 +21,17 @@ import java.util.Map;
 public class LessonDao {
     private final LessonMapper lessonMapper;
 
-    public List<Lesson> getLessonList(String selectDate, String day) {
+    public List<Lesson> findLessons(String selectDate, String day) {
         try {
-            return lessonMapper.getLessonList(selectDate, day);
+            return lessonMapper.findLessons(selectDate, day);
         } catch (EmptyResultDataAccessException e) {
             throw new BadRequestException(ErrorStatus.NOT_FOUND_LESSONLIST);
         }
     }
 
-    public Lesson getLessonData(LessonRequest.detail request) {
+    public Lesson findLessonDetail(LessonRequest.detail request) {
         try {
-            return lessonMapper.getLessonData(request);
+            return lessonMapper.findLessonDetail(request);
         } catch (EmptyResultDataAccessException e) {
             throw new BadRequestException(ErrorStatus.NOT_FOUND_LESSON);
         }
@@ -43,13 +43,13 @@ public class LessonDao {
         return result;
     }
 
-    public int cancel(int reserveSn) {
-        return lessonMapper.cancel(reserveSn);
+    public int updateReserve(int reserveId) {
+        return lessonMapper.cancel(reserveId);
     }
 
-    public List<Reserve> getReserveList(LessonRequest.reserveList reserveList) {
+    public List<Reserve> findReserveLessons(LessonRequest.reserveList reserveList) {
         try {
-            return lessonMapper.getReserveList(reserveList);
+            return lessonMapper.findReserveLessons(reserveList);
         } catch (EmptyResultDataAccessException e) {
             throw new BadRequestException(ErrorStatus.NOT_FOUND_RESERVEIST);
         }

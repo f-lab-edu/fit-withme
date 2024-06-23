@@ -7,7 +7,9 @@ import com.example.fitwithme.domain.model.Reserve;
 import com.example.fitwithme.jwt.JwtUtil;
 import com.example.fitwithme.presentation.dto.request.LessonRequest;
 import com.example.fitwithme.presentation.dto.request.UserRequest;
+import com.example.fitwithme.presentation.dto.response.LessonResponse;
 import com.example.fitwithme.presentation.dto.response.UserResponse;
+import com.example.fitwithme.util.DateUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,29 +35,29 @@ public class LessonController {
     private final LessonService lessonService;
 
     @GetMapping("/search/{selectDate}")
-    public ResponseEntity<List<Lesson>> getLessonList(@PathVariable String selectDate) {
-        List<Lesson> lessonList = lessonService.getLessonList(selectDate);
+    public ResponseEntity<List<Lesson>> findLessons(@PathVariable String selectDate) {
+        List<Lesson> lessonList = lessonService.findLessons(selectDate);
         return ResponseEntity.ok(lessonList);
     }
 
     @GetMapping("/detail")
-    public ResponseEntity<Lesson> getLessonList(@RequestBody LessonRequest.detail request) {
-        Lesson lessonData = lessonService.getLessonData(request);
+    public ResponseEntity<Lesson> findLessonDetail(@RequestBody LessonRequest.detail request) {
+        Lesson lessonData = lessonService.findLessonDetail(request);
         return ResponseEntity.ok(lessonData);
     }
 
     @PostMapping("/reserve")
-    public ResponseEntity<LessonRequest.reserve> reserve(@Valid @RequestBody LessonRequest.reserve request, @RequestHeader("ACCESS_TOKEN") String accessToken){
+    public ResponseEntity<LessonResponse.reserve> reserve(@Valid @RequestBody LessonRequest.reserve request, @RequestHeader("ACCESS_TOKEN") String accessToken){
         String userId = jwtUtil.getUserIdFromToken(accessToken);
         request.setUserId(userId);
 
-        LessonRequest.reserve reserve = lessonService.reserve(request);
+        LessonResponse.reserve reserve = lessonService.reserve(request);
         return ResponseEntity.ok(reserve);
     }
 
-    @PutMapping("/cancel/{reserveSn}")
-    public ResponseEntity<String> cancel(@PathVariable int reserveSn){
-        boolean isCancelled = lessonService.cancel(reserveSn);
+    @PutMapping("/cancel/{reserveId}")
+    public ResponseEntity<String> cancel(@PathVariable int reserveId){
+        boolean isCancelled = lessonService.cancel(reserveId);
         if (isCancelled) {
             return ResponseEntity.ok("예약 취소");
         } else {
@@ -64,18 +66,15 @@ public class LessonController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Reserve>> getReserveList(@RequestHeader("ACCESS_TOKEN") String accessToken) {
+    public ResponseEntity<List<Reserve>> findReserveLessons(@RequestHeader("ACCESS_TOKEN") String accessToken) {
         LessonRequest.reserveList reserveList = new LessonRequest.reserveList();
 
-        LocalDate today = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String date = today.format(formatter);
-        reserveList.setToday(date);
+        reserveList.setToday(DateUtil.getToday());
 
         String userId = jwtUtil.getUserIdFromToken(accessToken);
         reserveList.setUserId(userId);
 
-        List<Reserve> lessonList = lessonService.getReserveList(reserveList);
+        List<Reserve> lessonList = lessonService.findReserveLessons(reserveList);
         return ResponseEntity.ok(lessonList);
     }
 

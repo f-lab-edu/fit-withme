@@ -10,9 +10,12 @@ import com.example.fitwithme.infrastructure.dao.UserDao;
 import com.example.fitwithme.jwt.JwtUtil;
 import com.example.fitwithme.presentation.dto.request.LessonRequest;
 import com.example.fitwithme.presentation.dto.request.UserRequest;
+import com.example.fitwithme.presentation.dto.response.LessonResponse;
 import com.example.fitwithme.presentation.dto.response.UserResponse;
+import com.example.fitwithme.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,35 +34,35 @@ import java.util.Map;
 public class LessonService {
     private final LessonDao lessonDao;
 
-    public List<Lesson> getLessonList(String selectDate) {
-        LocalDate date = LocalDate.parse(selectDate, DateTimeFormatter.ISO_LOCAL_DATE);
-        DayOfWeek dayOfWeek = date.getDayOfWeek();
-        String day = dayOfWeek.getDisplayName(TextStyle.NARROW, Locale.KOREAN);
 
-        return lessonDao.getLessonList(selectDate, day);
+    public List<Lesson> findLessons(String selectDate) {
+        String day = DateUtil.getDayByDate(selectDate);
+
+        return lessonDao.findLessons(selectDate, day);
     }
 
-    public Lesson getLessonData(LessonRequest.detail request) {
-        return lessonDao.getLessonData(request);
+    public Lesson findLessonDetail(LessonRequest.detail request) {
+        return lessonDao.findLessonDetail(request);
     }
 
     @Transactional
-    public LessonRequest.reserve reserve(LessonRequest.reserve request) {
-        Long reserveSn = lessonDao.create(request);
+    public LessonResponse.reserve reserve(LessonRequest.reserve request) {
+        Long reserveId = lessonDao.create(request);
+        LessonResponse.reserve response = LessonResponse.reserve.builder().build();
 
-        if(reserveSn > 0){
-            request.setReserveSn(reserveSn);
-            request.setStatus("예약 성공");
+        if(reserveId > 0){
+            response.setReserveId(reserveId);
+            response.setStatus("예약 성공");
         }else {
-            request.setStatus("예약 실패");
+            response.setStatus("예약 실패");
         }
 
-        return request;
+        return response;
     }
 
     @Transactional
-    public boolean cancel(int reserveSn) {
-        int result = lessonDao.cancel(reserveSn);
+    public boolean cancel(int reserveId) {
+        int result = lessonDao.updateReserve(reserveId);
 
         if(result > 0){
             return true;
@@ -68,7 +71,7 @@ public class LessonService {
         }
     }
 
-    public List<Reserve> getReserveList(LessonRequest.reserveList reserveList) {
-        return lessonDao.getReserveList(reserveList);
+    public List<Reserve> findReserveLessons(LessonRequest.reserveList reserveList) {
+        return lessonDao.findReserveLessons(reserveList);
     }
 }

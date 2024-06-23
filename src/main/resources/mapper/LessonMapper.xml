@@ -4,11 +4,11 @@
 
     <select id="getLessonList" parameterType="string" resultType="com.example.fitwithme.domain.model.Lesson">
         SELECT
-            L.LESSON_SN
-            ,(SELECT CONCAT(C.CENTER_NAME, ' ', C.CENTER_LOCATION, '점') FROM CENTER C WHERE C.CENTER_SN = L.CENTER_SN) AS CENTER
+            L.LESSON_ID
+            ,(SELECT CONCAT(C.CENTER_NAME, ' ', C.CENTER_LOCATION, '점') FROM CENTER C WHERE C.CENTER_ID = L.CENTER_ID) AS CENTER
             ,L.LESSON_NAME
-            ,(SELECT I.INSTRUCTOR_NAME FROM INSTRUCTOR I WHERE I.INSTRUCTOR_SN = L.INSTRUCTOR_SN) AS INSTRUCTOR_NAME
-            ,(SELECT COUNT(*) FROM RESERVE R WHERE R.LESSON_SN = l.lesson_sn AND r.RESERVE_DATE = #{selectDate} AND r.CANCEL_AT = 0) AS curr_personnel
+            ,(SELECT I.INSTRUCTOR_NAME FROM INSTRUCTOR I WHERE I.INSTRUCTOR_ID = L.INSTRUCTOR_ID) AS INSTRUCTOR_NAME
+            ,(SELECT COUNT(*) FROM RESERVE R WHERE R.LESSON_ID = L.LESSON_ID AND R.RESERVE_DATE = #{selectDate} AND R.CANCEL_AT = 0) AS CURRENT_PERSONNEL
             ,L.PERSONNEL
             ,L.LESSON_DAY
             ,L.START_TIME
@@ -21,11 +21,11 @@
 
     <select id="getLessonData" parameterType="com.example.fitwithme.presentation.dto.request.LessonRequest$detail" resultType="com.example.fitwithme.domain.model.Lesson">
         SELECT
-             L.LESSON_SN
-             ,(SELECT CONCAT(C.CENTER_NAME, ' ', C.CENTER_LOCATION, '점') FROM CENTER C WHERE C.CENTER_SN = L.CENTER_SN) AS CENTER
+             L.LESSON_ID
+             ,(SELECT CONCAT(C.CENTER_NAME, ' ', C.CENTER_LOCATION, '점') FROM CENTER C WHERE C.CENTER_ID = L.CENTER_ID) AS CENTER
              ,L.LESSON_NAME
-             ,(SELECT I.INSTRUCTOR_NAME FROM INSTRUCTOR I WHERE I.INSTRUCTOR_SN = L.INSTRUCTOR_SN) AS INSTRUCTOR_NAME
-             ,(SELECT COUNT(*) FROM RESERVE R WHERE R.LESSON_SN = l.lesson_sn AND r.RESERVE_DATE = #{selectDate} AND r.CANCEL_AT = 0) AS curr_personnel
+             ,(SELECT I.INSTRUCTOR_NAME FROM INSTRUCTOR I WHERE I.INSTRUCTOR_ID = L.INSTRUCTOR_ID) AS INSTRUCTOR_NAME
+             ,(SELECT COUNT(*) FROM RESERVE R WHERE R.LESSON_ID = L.LESSON_ID AND R.RESERVE_DATE = #{selectDate} AND R.CANCEL_AT = 0) AS CURRENT_PERSONNEL
              ,L.PERSONNEL
              ,L.LESSON_DAY
              ,L.START_TIME
@@ -33,20 +33,20 @@
         FROM
             LESSON L
         WHERE
-            L.LESSON_SN = #{lessonSn}
+            L.LESSON_ID = #{lessonId}
     </select>
 
     <insert id="create" parameterType="com.example.fitwithme.presentation.dto.request.LessonRequest$reserve" useGeneratedKeys="true" keyProperty="reserveSn">
         INSERT INTO RESERVE
             (
-              LESSON_SN
+              LESSON_ID
             , USER_ID
             , RESERVE_DATE
             , CANCEL_AT
             )
         VALUES
             (
-              #{lessonSn}
+              #{lessonId}
             , #{userId}
             , #{selectDate}
             ,0
@@ -54,34 +54,34 @@
     </insert>
 
     <update id="cancel" parameterType="int">
-        UPDATE reserve
+        UPDATE RESERVE
         SET
-            cancel_at=1
+            CANCEL_AT=1
         WHERE
-            reserve_sn=#{reserveSn}
+            RESERVE_ID=#{reserveId}
     </update>
 
     <select id="getReserveList" parameterType="com.example.fitwithme.presentation.dto.request.LessonRequest$reserveList" resultType="com.example.fitwithme.domain.model.Reserve">
         SELECT
-            r.RESERVE_SN,
-            r.USER_ID,
-            r.RESERVE_DATE,
-            l.LESSON_SN,
-            l.LESSON_NAME,
-            i.INSTRUCTOR_NAME AS instructor_name,
-            (SELECT COUNT(*) FROM RESERVE r2 WHERE r2.LESSON_SN = l.LESSON_SN AND r2.RESERVE_DATE = #{today} AND r2.CANCEL_AT = 0) AS curr_personnel,
+            R.RESERVE_ID,
+            R.USER_ID,
+            R.RESERVE_DATE,
+            L.LESSON_ID,
+            L.LESSON_NAME,
+            I.INSTRUCTOR_NAME AS INSTRUCTOR_NAME,
+            (SELECT COUNT(*) FROM RESERVE R2 WHERE R2.LESSON_ID = L.LESSON_ID AND R2.RESERVE_DATE = #{today} AND R2.CANCEL_AT = 0) AS CURRENT_PERSONNEL,
             l.PERSONNEL,
             l.LESSON_DAY,
             l.START_TIME,
             l.END_TIME
         FROM
-            RESERVE r
-                LEFT JOIN LESSON l ON r.LESSON_SN = l.LESSON_SN
-                LEFT JOIN CENTER c ON l.CENTER_SN = c.CENTER_SN
-                LEFT JOIN INSTRUCTOR i ON l.INSTRUCTOR_SN = i.INSTRUCTOR_SN
+            RESERVE R
+                LEFT JOIN LESSON L ON R.LESSON_ID = L.LESSON_ID
+                LEFT JOIN CENTER C ON L.CENTER_ID = C.CENTER_ID
+                LEFT JOIN INSTRUCTOR I ON L.INSTRUCTOR_ID = I.INSTRUCTOR_ID
         WHERE
-            r.USER_ID = #{userId}
-          AND r.RESERVE_DATE = #{today}
-          AND r.CANCEL_AT = 0
+            R.USER_ID = #{userId}
+          AND R.RESERVE_DATE = #{today}
+          AND R.CANCEL_AT = 0
     </select>
 </mapper>
