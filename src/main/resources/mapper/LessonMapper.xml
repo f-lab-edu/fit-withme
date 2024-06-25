@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.fitwithme.infrastructure.mapper.LessonMapper">
 
-    <select id="getLessonList" parameterType="string" resultType="com.example.fitwithme.domain.model.Lesson">
+    <select id="findLessons" parameterType="string" resultType="com.example.fitwithme.domain.model.Lesson">
         SELECT
             L.LESSON_ID,
             (SELECT CONCAT(C.CENTER_NAME, ' ', C.CENTER_LOCATION, '점') FROM CENTER C WHERE C.CENTER_ID = L.CENTER_ID) AS CENTER,
@@ -19,21 +19,51 @@
             L.LESSON_DAY LIKE CONCAT('%', #{day}, '%')
     </select>
 
-    <select id="getLessonData" parameterType="com.example.fitwithme.presentation.dto.request.LessonRequest$detail" resultType="com.example.fitwithme.domain.model.Lesson">
+    <select id="findLessonById" parameterType="java.lang.Long" resultType="com.example.fitwithme.domain.model.Lesson">
         SELECT
-             L.LESSON_ID,
-             (SELECT CONCAT(C.CENTER_NAME, ' ', C.CENTER_LOCATION, '점') FROM CENTER C WHERE C.CENTER_ID = L.CENTER_ID) AS CENTER,
-             L.LESSON_NAME,
-             (SELECT I.INSTRUCTOR_NAME FROM INSTRUCTOR I WHERE I.INSTRUCTOR_ID = L.INSTRUCTOR_ID) AS INSTRUCTOR_NAME,
-             (SELECT COUNT(*) FROM RESERVE R WHERE R.LESSON_ID = L.LESSON_ID AND R.RESERVE_DATE = #{selectDate} AND R.CANCELED = 0) AS CURRENT_PERSONNEL,
-             L.PERSONNEL,
-             L.LESSON_DAY,
-             L.START_TIME,
-             L.END_TIME
+            LESSON_ID,
+            CENTER_ID,
+            LESSON_NAME,
+            INSTRUCTOR_ID,
+            PERSONNEL,
+            LESSON_DAY,
+            START_TIME,
+            END_TIME
         FROM
-            LESSON L
+            LESSON
+        WHERE
+            LESSON_ID = #{lessonId}
+    </select>
+
+    <select id="findCenterByLessonId" parameterType="java.lang.Long" resultType="java.lang.String">
+        SELECT
+            CONCAT(C.CENTER_NAME, ' ', C.CENTER_LOCATION, '점') AS CENTER
+        FROM
+            CENTER C
+        JOIN LESSON L ON C.CENTER_ID = L.CENTER_ID
         WHERE
             L.LESSON_ID = #{lessonId}
+    </select>
+
+    <select id="findInstructorByLessonId" parameterType="java.lang.Long" resultType="java.lang.String">
+        SELECT
+            I.INSTRUCTOR_NAME
+        FROM
+            INSTRUCTOR I
+        JOIN LESSON L ON I.INSTRUCTOR_ID = L.INSTRUCTOR_ID
+        WHERE
+            L.LESSON_ID = #{lessonId}
+    </select>
+
+    <select id="countCurrentPersonnel" parameterType="map" resultType="java.lang.Integer">
+        SELECT
+            COUNT(*)
+        FROM
+            RESERVE R
+        WHERE
+          R.LESSON_ID = #{lessonId}
+          AND R.RESERVE_DATE = #{selectDate}
+          AND R.CANCELED = 0
     </select>
 
     <insert id="create" parameterType="com.example.fitwithme.presentation.dto.request.LessonRequest$reserve" useGeneratedKeys="true" keyProperty="reserveSn">
@@ -61,7 +91,7 @@
             RESERVE_ID=#{reserveId}
     </update>
 
-    <select id="getReserveList" parameterType="com.example.fitwithme.presentation.dto.request.LessonRequest$reserveList" resultType="com.example.fitwithme.domain.model.Reserve">
+    <select id="findReserveLessons" parameterType="com.example.fitwithme.presentation.dto.request.LessonRequest$reserveList" resultType="com.example.fitwithme.domain.model.Reserve">
         SELECT
             R.RESERVE_ID,
             R.USER_ID,

@@ -23,6 +23,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -42,7 +43,30 @@ public class LessonService {
     }
 
     public Lesson findLessonDetail(LessonRequest.detail request) {
-        return lessonDao.findLessonDetail(request);
+
+        Long lessonId = request.getLessonId();
+        String selectDate = request.getSelectDate();
+
+        Lesson lessonBase = lessonDao.findLessonById(lessonId);
+        String center = lessonDao.findCenterByLessonId(lessonId);
+        String instructorName = lessonDao.findInstructorByLessonId(lessonId);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("lessonId", lessonId);
+        params.put("selectDate", selectDate);
+        int currentPersonnel = lessonDao.countCurrentPersonnel(params);
+
+        return Lesson.builder()
+                .lessonId(lessonBase.lessonId())
+                .center(center)
+                .lessonName(lessonBase.lessonName())
+                .instructorName(instructorName)
+                .currentPersonnel(currentPersonnel)
+                .personnel(lessonBase.personnel())
+                .lessonDay(lessonBase.lessonDay())
+                .startTime(lessonBase.startTime())
+                .endTime(lessonBase.endTime())
+                .build();
     }
 
     @Transactional

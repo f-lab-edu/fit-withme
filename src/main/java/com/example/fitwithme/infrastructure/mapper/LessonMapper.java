@@ -17,7 +17,13 @@ public interface LessonMapper {
 
     List<Lesson> findLessons(String selectDate, String day);
 
-    Lesson findLessonDetail(LessonRequest.detail request);
+    Lesson findLessonById(Long lessonId);
+
+    String findCenterByLessonId(Long lessonId);
+
+    String findInstructorByLessonId(Long lessonId);
+
+    int countCurrentPersonnel(Map<String, Object> params);
 
     Long create(LessonRequest.reserve request);
 

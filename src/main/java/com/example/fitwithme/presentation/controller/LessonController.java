@@ -2,6 +2,8 @@ package com.example.fitwithme.presentation.controller;
 
 import com.example.fitwithme.application.service.LessonService;
 import com.example.fitwithme.application.service.UserService;
+import com.example.fitwithme.common.exception.BadRequestException;
+import com.example.fitwithme.common.exception.ErrorStatus;
 import com.example.fitwithme.domain.model.Lesson;
 import com.example.fitwithme.domain.model.Reserve;
 import com.example.fitwithme.jwt.JwtUtil;
@@ -56,12 +58,12 @@ public class LessonController {
     }
 
     @PutMapping("/cancel/{reserveId}")
-    public ResponseEntity<String> cancel(@PathVariable int reserveId){
+    public ResponseEntity<Integer> cancel(@PathVariable int reserveId){
         boolean isCancelled = lessonService.cancel(reserveId);
         if (isCancelled) {
-            return ResponseEntity.ok("예약 취소");
+            return ResponseEntity.ok(reserveId);
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("예약 취소 실패");
+            throw new BadRequestException(ErrorStatus.CANCEL_FAIL);
         }
     }
 

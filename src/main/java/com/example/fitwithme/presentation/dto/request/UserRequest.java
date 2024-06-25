@@ -14,6 +14,7 @@ import jakarta.validation.constraints.Pattern;
 public class UserRequest {
 
     @Getter
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class login {
 

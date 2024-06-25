@@ -19,7 +19,7 @@ public class LessonRequest {
     public static class detail {
 
         private String selectDate;
-        private String lessonId;
+        private Long lessonId;
 
     }
 
@@ -28,7 +28,7 @@ public class LessonRequest {
     @AllArgsConstructor
     public static class reserve {
 
-        private String lessonId;
+        private Long lessonId;
         private String userId;
         private String selectDate;
         private Long reserveId;
