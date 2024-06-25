@@ -11,7 +11,7 @@
       user_password,
       email,
       phone,
-      delete_at
+      leaved
     )
     VALUES
       (

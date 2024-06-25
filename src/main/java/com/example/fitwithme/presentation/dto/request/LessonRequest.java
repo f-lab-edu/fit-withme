@@ -37,16 +37,12 @@ public class LessonRequest {
     }
 
     @Getter
-    @Setter
     @AllArgsConstructor
     public static class reserveList {
 
         private String today;
         private String userId;
 
-        public reserveList() {
-
-        }
     }
 
 }

@@ -67,12 +67,10 @@ public class LessonController {
 
     @GetMapping
     public ResponseEntity<List<Reserve>> findReserveLessons(@RequestHeader("ACCESS_TOKEN") String accessToken) {
-        LessonRequest.reserveList reserveList = new LessonRequest.reserveList();
-
-        reserveList.setToday(DateUtil.getToday());
-
+        String today = DateUtil.getToday();
         String userId = jwtUtil.getUserIdFromToken(accessToken);
-        reserveList.setUserId(userId);
+
+        LessonRequest.reserveList reserveList = new LessonRequest.reserveList(today, userId);
 
         List<Reserve> lessonList = lessonService.findReserveLessons(reserveList);
         return ResponseEntity.ok(lessonList);

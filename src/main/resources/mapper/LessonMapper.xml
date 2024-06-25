@@ -4,15 +4,15 @@
 
     <select id="getLessonList" parameterType="string" resultType="com.example.fitwithme.domain.model.Lesson">
         SELECT
-            L.LESSON_ID
-            ,(SELECT CONCAT(C.CENTER_NAME, ' ', C.CENTER_LOCATION, '점') FROM CENTER C WHERE C.CENTER_ID = L.CENTER_ID) AS CENTER
-            ,L.LESSON_NAME
-            ,(SELECT I.INSTRUCTOR_NAME FROM INSTRUCTOR I WHERE I.INSTRUCTOR_ID = L.INSTRUCTOR_ID) AS INSTRUCTOR_NAME
-            ,(SELECT COUNT(*) FROM RESERVE R WHERE R.LESSON_ID = L.LESSON_ID AND R.RESERVE_DATE = #{selectDate} AND R.CANCEL_AT = 0) AS CURRENT_PERSONNEL
-            ,L.PERSONNEL
-            ,L.LESSON_DAY
-            ,L.START_TIME
-            ,L.END_TIME
+            L.LESSON_ID,
+            (SELECT CONCAT(C.CENTER_NAME, ' ', C.CENTER_LOCATION, '점') FROM CENTER C WHERE C.CENTER_ID = L.CENTER_ID) AS CENTER,
+            L.LESSON_NAME,
+            (SELECT I.INSTRUCTOR_NAME FROM INSTRUCTOR I WHERE I.INSTRUCTOR_ID = L.INSTRUCTOR_ID) AS INSTRUCTOR_NAME,
+            (SELECT COUNT(*) FROM RESERVE R WHERE R.LESSON_ID = L.LESSON_ID AND R.RESERVE_DATE = #{selectDate} AND R.CANCELED = 0) AS CURRENT_PERSONNEL,
+            L.PERSONNEL,
+            L.LESSON_DAY,
+            L.START_TIME,
+            L.END_TIME
         FROM
             LESSON L
         WHERE
@@ -21,15 +21,15 @@
 
     <select id="getLessonData" parameterType="com.example.fitwithme.presentation.dto.request.LessonRequest$detail" resultType="com.example.fitwithme.domain.model.Lesson">
         SELECT
-             L.LESSON_ID
-             ,(SELECT CONCAT(C.CENTER_NAME, ' ', C.CENTER_LOCATION, '점') FROM CENTER C WHERE C.CENTER_ID = L.CENTER_ID) AS CENTER
-             ,L.LESSON_NAME
-             ,(SELECT I.INSTRUCTOR_NAME FROM INSTRUCTOR I WHERE I.INSTRUCTOR_ID = L.INSTRUCTOR_ID) AS INSTRUCTOR_NAME
-             ,(SELECT COUNT(*) FROM RESERVE R WHERE R.LESSON_ID = L.LESSON_ID AND R.RESERVE_DATE = #{selectDate} AND R.CANCEL_AT = 0) AS CURRENT_PERSONNEL
-             ,L.PERSONNEL
-             ,L.LESSON_DAY
-             ,L.START_TIME
-             ,L.END_TIME
+             L.LESSON_ID,
+             (SELECT CONCAT(C.CENTER_NAME, ' ', C.CENTER_LOCATION, '점') FROM CENTER C WHERE C.CENTER_ID = L.CENTER_ID) AS CENTER,
+             L.LESSON_NAME,
+             (SELECT I.INSTRUCTOR_NAME FROM INSTRUCTOR I WHERE I.INSTRUCTOR_ID = L.INSTRUCTOR_ID) AS INSTRUCTOR_NAME,
+             (SELECT COUNT(*) FROM RESERVE R WHERE R.LESSON_ID = L.LESSON_ID AND R.RESERVE_DATE = #{selectDate} AND R.CANCELED = 0) AS CURRENT_PERSONNEL,
+             L.PERSONNEL,
+             L.LESSON_DAY,
+             L.START_TIME,
+             L.END_TIME
         FROM
             LESSON L
         WHERE
@@ -39,24 +39,24 @@
     <insert id="create" parameterType="com.example.fitwithme.presentation.dto.request.LessonRequest$reserve" useGeneratedKeys="true" keyProperty="reserveSn">
         INSERT INTO RESERVE
             (
-              LESSON_ID
-            , USER_ID
-            , RESERVE_DATE
-            , CANCEL_AT
+             LESSON_ID,
+             USER_ID,
+             RESERVE_DATE,
+             CANCELED
             )
         VALUES
             (
-              #{lessonId}
-            , #{userId}
-            , #{selectDate}
-            ,0
+             #{lessonId},
+             #{userId},
+             #{selectDate},
+             0
             )
     </insert>
 
     <update id="cancel" parameterType="int">
         UPDATE RESERVE
         SET
-            CANCEL_AT=1
+            CANCELED=1
         WHERE
             RESERVE_ID=#{reserveId}
     </update>
@@ -69,7 +69,7 @@
             L.LESSON_ID,
             L.LESSON_NAME,
             I.INSTRUCTOR_NAME AS INSTRUCTOR_NAME,
-            (SELECT COUNT(*) FROM RESERVE R2 WHERE R2.LESSON_ID = L.LESSON_ID AND R2.RESERVE_DATE = #{today} AND R2.CANCEL_AT = 0) AS CURRENT_PERSONNEL,
+            (SELECT COUNT(*) FROM RESERVE R2 WHERE R2.LESSON_ID = L.LESSON_ID AND R2.RESERVE_DATE = #{today} AND R2.CANCELED = 0) AS CURRENT_PERSONNEL,
             l.PERSONNEL,
             l.LESSON_DAY,
             l.START_TIME,
@@ -82,6 +82,6 @@
         WHERE
             R.USER_ID = #{userId}
           AND R.RESERVE_DATE = #{today}
-          AND R.CANCEL_AT = 0
+          AND R.CANCELED = 0
     </select>
 </mapper>
