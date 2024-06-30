@@ -53,9 +53,9 @@ public class LessonDao {
         }
     }
 
-    public int countCurrentPersonnel(Map<String, Object> params) {
+    public int countCurrentPersonnel(LessonRequest.detail request) {
         try {
-            return lessonMapper.countCurrentPersonnel(params);
+            return lessonMapper.countCurrentPersonnel(request);
         } catch (EmptyResultDataAccessException e) {
             throw new BadRequestException(ErrorStatus.NOT_FOUND_LESSON);
         }
@@ -67,13 +67,29 @@ public class LessonDao {
         return result;
     }
 
-    public int updateReserve(int reserveId) {
-        return lessonMapper.cancel(reserveId);
+    public int deleteReserve(int reserveId) {
+        return lessonMapper.deleteReserve(reserveId);
     }
 
-    public List<Reserve> findReserveLessons(LessonRequest.reserveList reserveList) {
+    public List<Reserve> findReservesByUserIdAndDate(LessonRequest.reserveList reserveList) {
         try {
-            return lessonMapper.findReserveLessons(reserveList);
+            return lessonMapper.findReservesByUserIdAndDate(reserveList);
+        } catch (EmptyResultDataAccessException e) {
+            throw new BadRequestException(ErrorStatus.NOT_FOUND_RESERVEIST);
+        }
+    }
+
+    public Lesson findLessonDetailsByLessonId(String lessonId) {
+        try {
+            return lessonMapper.findLessonDetailsByLessonId(lessonId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new BadRequestException(ErrorStatus.NOT_FOUND_RESERVEIST);
+        }
+    }
+
+    public int findCurrentPersonnel(LessonRequest.reserveList reserveList) {
+        try {
+            return lessonMapper.findCurrentPersonnel(reserveList);
         } catch (EmptyResultDataAccessException e) {
             throw new BadRequestException(ErrorStatus.NOT_FOUND_RESERVEIST);
         }

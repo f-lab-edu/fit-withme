@@ -23,11 +23,15 @@ public interface LessonMapper {
 
     String findInstructorByLessonId(Long lessonId);
 
-    int countCurrentPersonnel(Map<String, Object> params);
+    int countCurrentPersonnel(LessonRequest.detail request);
 
     Long create(LessonRequest.reserve request);
 
-    int cancel(int reserveId);
+    int deleteReserve(int reserveId);
 
-    List<Reserve> findReserveLessons(LessonRequest.reserveList reserveList);
+    List<Reserve> findReservesByUserIdAndDate(LessonRequest.reserveList reserveList);
+
+    Lesson findLessonDetailsByLessonId(String lessonId);
+
+    int findCurrentPersonnel(LessonRequest.reserveList reserveList);
 }

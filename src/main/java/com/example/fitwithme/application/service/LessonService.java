@@ -1,5 +1,6 @@
 package com.example.fitwithme.application.service;
 
+import com.example.fitwithme.common.enums.ReservationStatus;
 import com.example.fitwithme.common.exception.BadRequestException;
 import com.example.fitwithme.common.exception.ErrorStatus;
 import com.example.fitwithme.domain.model.Lesson;
@@ -23,10 +24,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 
 @Slf4j
@@ -45,16 +43,11 @@ public class LessonService {
     public Lesson findLessonDetail(LessonRequest.detail request) {
 
         Long lessonId = request.getLessonId();
-        String selectDate = request.getSelectDate();
 
         Lesson lessonBase = lessonDao.findLessonById(lessonId);
         String center = lessonDao.findCenterByLessonId(lessonId);
         String instructorName = lessonDao.findInstructorByLessonId(lessonId);
-
-        Map<String, Object> params = new HashMap<>();
-        params.put("lessonId", lessonId);
-        params.put("selectDate", selectDate);
-        int currentPersonnel = lessonDao.countCurrentPersonnel(params);
+        int currentPersonnel = lessonDao.countCurrentPersonnel(request);
 
         return Lesson.builder()
                 .lessonId(lessonBase.lessonId())
@@ -72,21 +65,17 @@ public class LessonService {
     @Transactional
     public LessonResponse.reserve reserve(LessonRequest.reserve request) {
         Long reserveId = lessonDao.create(request);
-        LessonResponse.reserve response = LessonResponse.reserve.builder().build();
-
-        if(reserveId > 0){
-            response.setReserveId(reserveId);
-            response.setStatus("예약 성공");
-        }else {
-            response.setStatus("예약 실패");
-        }
+        LessonResponse.reserve response = LessonResponse.reserve.builder()
+                .reserveId(reserveId)
+                .status(reserveId > 0 ? ReservationStatus.SUCCESS : ReservationStatus.FAILURE)
+                .build();
 
         return response;
     }
 
     @Transactional
     public boolean cancel(int reserveId) {
-        int result = lessonDao.updateReserve(reserveId);
+        int result = lessonDao.deleteReserve(reserveId);
 
         if(result > 0){
             return true;
@@ -96,6 +85,29 @@ public class LessonService {
     }
 
     public List<Reserve> findReserveLessons(LessonRequest.reserveList reserveList) {
-        return lessonDao.findReserveLessons(reserveList);
+        List<Reserve> reserves = lessonDao.findReservesByUserIdAndDate(reserveList);
+        List<Reserve> completeReserves = new ArrayList<>();
+
+        for (Reserve reserve : reserves) {
+            Lesson lessonDetails = lessonDao.findLessonDetailsByLessonId(reserve.lessonId());
+            int currentPersonnel = lessonDao.findCurrentPersonnel(reserveList);
+
+            Reserve completeReserve = new Reserve(
+                    reserve.reserveId(),
+                    reserve.userId(),
+                    reserve.reserveDate(),
+                    reserve.lessonId(),
+                    lessonDetails.lessonName(),
+                    lessonDetails.instructorName(),
+                    currentPersonnel,
+                    lessonDetails.personnel(),
+                    lessonDetails.lessonDay(),
+                    lessonDetails.startTime(),
+                    lessonDetails.endTime()
+            );
+            completeReserves.add(completeReserve);
+        }
+
+        return reserves;
     }
 }

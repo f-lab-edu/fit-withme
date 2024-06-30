@@ -55,7 +55,7 @@
             L.LESSON_ID = #{lessonId}
     </select>
 
-    <select id="countCurrentPersonnel" parameterType="map" resultType="java.lang.Integer">
+    <select id="countCurrentPersonnel" parameterType="com.example.fitwithme.presentation.dto.request.LessonRequest$detail" resultType="java.lang.Integer">
         SELECT
             COUNT(*)
         FROM
@@ -91,26 +91,47 @@
             RESERVE_ID=#{reserveId}
     </update>
 
-    <select id="findReserveLessons" parameterType="com.example.fitwithme.presentation.dto.request.LessonRequest$reserveList" resultType="com.example.fitwithme.domain.model.Reserve">
+    <select id="findReservesByUserIdAndDate" parameterType="com.example.fitwithme.presentation.dto.request.LessonRequest$reserveList" resultType="com.example.fitwithme.domain.model.Reserve">
         SELECT
             R.RESERVE_ID,
             R.USER_ID,
             R.RESERVE_DATE,
-            L.LESSON_ID,
-            L.LESSON_NAME,
-            I.INSTRUCTOR_NAME AS INSTRUCTOR_NAME,
-            (SELECT COUNT(*) FROM RESERVE R2 WHERE R2.LESSON_ID = L.LESSON_ID AND R2.RESERVE_DATE = #{today} AND R2.CANCELED = 0) AS CURRENT_PERSONNEL,
-            l.PERSONNEL,
-            l.LESSON_DAY,
-            l.START_TIME,
-            l.END_TIME
+            R.LESSON_ID
         FROM
             RESERVE R
-                LEFT JOIN LESSON L ON R.LESSON_ID = L.LESSON_ID
+        WHERE
+            R.USER_ID = #{userId}
+          AND R.RESERVE_DATE = #{today}
+          AND R.CANCELED = 0
+    </select>
+
+    <select id="findLessonDetailsByLessonId" parameterType="String" resultType="com.example.fitwithme.domain.model.Lesson">
+        SELECT
+            L.LESSON_ID,
+            L.LESSON_NAME,
+            L.PERSONNEL,
+            L.LESSON_DAY,
+            L.START_TIME,
+            L.END_TIME,
+            C.CENTER_ID,
+            C.CENTER_NAME,
+            I.INSTRUCTOR_ID,
+            I.INSTRUCTOR_NAME
+        FROM
+            LESSON L
                 LEFT JOIN CENTER C ON L.CENTER_ID = C.CENTER_ID
                 LEFT JOIN INSTRUCTOR I ON L.INSTRUCTOR_ID = I.INSTRUCTOR_ID
         WHERE
-            R.USER_ID = #{userId}
+            L.LESSON_ID = #{lessonId}
+    </select>
+
+    <select id="findCurrentPersonnel" parameterType="com.example.fitwithme.presentation.dto.request.LessonRequest$reserveList" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            RESERVE R
+        WHERE
+            R.LESSON_ID = #{lessonId}
           AND R.RESERVE_DATE = #{today}
           AND R.CANCELED = 0
     </select>
