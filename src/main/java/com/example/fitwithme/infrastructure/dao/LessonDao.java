@@ -94,4 +94,8 @@ public class LessonDao {
             throw new BadRequestException(ErrorStatus.NOT_FOUND_RESERVEIST);
         }
     }
+
+    public void updateReserveNumberPlus(LessonRequest.reserve request) {
+        lessonMapper.updateReserveNumberPlus(request);
+    }
 }

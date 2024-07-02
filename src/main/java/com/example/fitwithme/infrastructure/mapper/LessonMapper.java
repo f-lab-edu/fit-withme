@@ -34,4 +34,6 @@ public interface LessonMapper {
     Lesson findLessonDetailsByLessonId(String lessonId);
 
     int findCurrentPersonnel(LessonRequest.reserveList reserveList);
+
+    void updateReserveNumberPlus(LessonRequest.reserve request);
 }

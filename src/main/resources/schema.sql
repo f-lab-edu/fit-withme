@@ -111,3 +111,11 @@ CREATE TABLE reserve (
 
     PRIMARY KEY (reserve_id)
 );
+
+DROP TABLE IF EXISTS reserve_number;
+
+CREATE TABLE reserve_number (
+     lesson_id   int   NULL,
+     reserve_date   date   NULL,
+     current_personnel   int   NULL,
+);

@@ -37,7 +37,7 @@ public class LessonController {
     private final LessonService lessonService;
 
     @GetMapping("/search/{selectDate}")
-    public ResponseEntity<List<Lesson>> findLessons(@PathVariable String selectDate) {
+    public ResponseEntity<List<Lesson>> findLessons(@PathVariable String selectDate, @RequestHeader("ACCESS_TOKEN") String accessToken) {
         List<Lesson> lessonList = lessonService.findLessons(selectDate);
         return ResponseEntity.ok(lessonList);
     }

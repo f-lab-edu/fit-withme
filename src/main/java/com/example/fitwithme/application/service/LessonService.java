@@ -65,6 +65,8 @@ public class LessonService {
     @Transactional
     public LessonResponse.reserve reserve(LessonRequest.reserve request) {
         Long reserveId = lessonDao.create(request);
+        lessonDao.updateReserveNumberPlus(request);
+
         LessonResponse.reserve response = LessonResponse.reserve.builder()
                 .reserveId(reserveId)
                 .status(reserveId > 0 ? ReservationStatus.SUCCESS : ReservationStatus.FAILURE)
