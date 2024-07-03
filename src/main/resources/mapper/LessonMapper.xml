@@ -2,13 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.fitwithme.infrastructure.mapper.LessonMapper">
 
-    <select id="findLessons" parameterType="string" resultType="com.example.fitwithme.domain.model.Lesson">
+    <select id="findAllLesson" parameterType="string" resultType="com.example.fitwithme.domain.model.Lesson">
         SELECT
             L.LESSON_ID,
             (SELECT CONCAT(C.CENTER_NAME, ' ', C.CENTER_LOCATION, '점') FROM CENTER C WHERE C.CENTER_ID = L.CENTER_ID) AS CENTER,
             L.LESSON_NAME,
             (SELECT I.INSTRUCTOR_NAME FROM INSTRUCTOR I WHERE I.INSTRUCTOR_ID = L.INSTRUCTOR_ID) AS INSTRUCTOR_NAME,
-            (SELECT CURRENT_PERSONNEL FROM RESERVE_NUMBER R WHERE R.LESSON_ID = L.LESSON_ID AND R.RESERVE_DATE = #{selectDate}) AS CURRENT_PERSONNEL,
+            (SELECT COUNT(*) FROM RESERVE R WHERE R.LESSON_ID = L.LESSON_ID AND R.RESERVE_DATE = #{selectDate} AND R.CANCELED = 0) AS CURRENT_PERSONNEL,
             L.PERSONNEL,
             L.LESSON_DAY,
             L.START_TIME,
@@ -57,12 +57,13 @@
 
     <select id="countCurrentPersonnel" parameterType="com.example.fitwithme.presentation.dto.request.LessonRequest$detail" resultType="java.lang.Integer">
         SELECT
-            CURRENT_PERSONNEL
+            COUNT(*)
         FROM
-            RESERVE_NUMBER
+            RESERVE R
         WHERE
-          LESSON_ID = #{lessonId}
-          AND RESERVE_DATE = #{selectDate}
+          R.LESSON_ID = #{lessonId}
+          AND R.RESERVE_DATE = #{selectDate}
+          AND R.CANCELED = 0
     </select>
 
     <insert id="create" parameterType="com.example.fitwithme.presentation.dto.request.LessonRequest$reserve" useGeneratedKeys="true" keyProperty="reserveSn">
@@ -82,15 +83,6 @@
             )
     </insert>
 
-    <update id="updateReserveNumberPlus" parameterType="com.example.fitwithme.presentation.dto.request.LessonRequest$reserve">
-        UPDATE RESERVE_NUMBER
-        SET
-            CURRENT_PERSONNEL = CURRENT_PERSONNEL + 1
-        WHERE
-            LESSON_ID = #{lessonId}
-            AND RESERVE_DATE = #{selectDate}
-    </update>
-
     <update id="cancel" parameterType="int">
         UPDATE RESERVE
         SET
@@ -99,12 +91,13 @@
             RESERVE_ID=#{reserveId}
     </update>
 
-    <select id="findReservesByUserIdAndDate" parameterType="com.example.fitwithme.presentation.dto.request.LessonRequest$reserveList" resultType="com.example.fitwithme.domain.model.Reserve">
+    <select id="findAllReserveByUserIdAndDate" parameterType="com.example.fitwithme.presentation.dto.request.LessonRequest$reserveList" resultType="com.example.fitwithme.domain.model.Reserve">
         SELECT
             RESERVE_ID,
             USER_ID,
             RESERVE_DATE,
-            LESSON_ID
+            LESSON_ID,
+            (SELECT COUNT(*) FROM RESERVE R WHERE R.LESSON_ID = RESERVE.LESSON_ID AND R.RESERVE_DATE = #{selectDate} AND R.CANCELED = 0) AS CURRENT_PERSONNEL
         FROM
             RESERVE
         WHERE
@@ -133,14 +126,4 @@
             L.LESSON_ID = #{lessonId}
     </select>
 
-    <select id="findCurrentPersonnel" parameterType="com.example.fitwithme.presentation.dto.request.LessonRequest$reserveList" resultType="int">
-        SELECT
-            COUNT(*)
-        FROM
-            RESERVE
-        WHERE
-            LESSON_ID = #{lessonId}
-          AND RESERVE_DATE = #{today}
-          AND CANCELED = 0
-    </select>
 </mapper>

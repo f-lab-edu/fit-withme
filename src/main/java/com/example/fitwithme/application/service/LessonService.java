@@ -33,11 +33,10 @@ import java.util.*;
 public class LessonService {
     private final LessonDao lessonDao;
 
-
     public List<Lesson> findLessons(String selectDate) {
         String day = DateUtil.getDayByDate(selectDate);
 
-        return lessonDao.findLessons(selectDate, day);
+        return lessonDao.findAllLesson(selectDate, day);
     }
 
     public Lesson findLessonDetail(LessonRequest.detail request) {
@@ -65,7 +64,6 @@ public class LessonService {
     @Transactional
     public LessonResponse.reserve reserve(LessonRequest.reserve request) {
         Long reserveId = lessonDao.create(request);
-        lessonDao.updateReserveNumberPlus(request);
 
         LessonResponse.reserve response = LessonResponse.reserve.builder()
                 .reserveId(reserveId)
@@ -87,12 +85,11 @@ public class LessonService {
     }
 
     public List<Reserve> findReserveLessons(LessonRequest.reserveList reserveList) {
-        List<Reserve> reserves = lessonDao.findReservesByUserIdAndDate(reserveList);
+        List<Reserve> reserves = lessonDao.findAllReserveByUserIdAndDate(reserveList);
         List<Reserve> completeReserves = new ArrayList<>();
 
         for (Reserve reserve : reserves) {
             Lesson lessonDetails = lessonDao.findLessonDetailsByLessonId(reserve.lessonId());
-            int currentPersonnel = lessonDao.findCurrentPersonnel(reserveList);
 
             Reserve completeReserve = new Reserve(
                     reserve.reserveId(),
@@ -101,7 +98,7 @@ public class LessonService {
                     reserve.lessonId(),
                     lessonDetails.lessonName(),
                     lessonDetails.instructorName(),
-                    currentPersonnel,
+                    reserve.currentPersonnel(),
                     lessonDetails.personnel(),
                     lessonDetails.lessonDay(),
                     lessonDetails.startTime(),

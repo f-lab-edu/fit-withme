@@ -80,18 +80,9 @@ public class JwtUtil {
                 return false;
             }
             return true;
-        } catch (ExpiredJwtException e) {
-            System.out.println("Token has expired: " + e.getMessage());
-        } catch (UnsupportedJwtException e) {
-            System.out.println("Unsupported JWT: " + e.getMessage());
-        } catch (MalformedJwtException e) {
-            System.out.println("Malformed JWT: " + e.getMessage());
-        } catch (SignatureException e) {
-            System.out.println("Invalid JWT signature: " + e.getMessage());
-        } catch (IllegalArgumentException e) {
-            System.out.println("Illegal argument: " + e.getMessage());
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
         }
-        return false;
     }
 
     public String getUserIdFromToken(String token) {

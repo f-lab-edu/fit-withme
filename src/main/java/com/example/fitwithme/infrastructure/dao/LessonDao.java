@@ -21,9 +21,9 @@ import java.util.Map;
 public class LessonDao {
     private final LessonMapper lessonMapper;
 
-    public List<Lesson> findLessons(String selectDate, String day) {
+    public List<Lesson> findAllLesson(String selectDate, String day) {
         try {
-            return lessonMapper.findLessons(selectDate, day);
+            return lessonMapper.findAllLesson(selectDate, day);
         } catch (EmptyResultDataAccessException e) {
             throw new BadRequestException(ErrorStatus.NOT_FOUND_LESSONLIST);
         }
@@ -71,9 +71,9 @@ public class LessonDao {
         return lessonMapper.deleteReserve(reserveId);
     }
 
-    public List<Reserve> findReservesByUserIdAndDate(LessonRequest.reserveList reserveList) {
+    public List<Reserve> findAllReserveByUserIdAndDate(LessonRequest.reserveList reserveList) {
         try {
-            return lessonMapper.findReservesByUserIdAndDate(reserveList);
+            return lessonMapper.findAllReserveByUserIdAndDate(reserveList);
         } catch (EmptyResultDataAccessException e) {
             throw new BadRequestException(ErrorStatus.NOT_FOUND_RESERVEIST);
         }
@@ -87,15 +87,4 @@ public class LessonDao {
         }
     }
 
-    public int findCurrentPersonnel(LessonRequest.reserveList reserveList) {
-        try {
-            return lessonMapper.findCurrentPersonnel(reserveList);
-        } catch (EmptyResultDataAccessException e) {
-            throw new BadRequestException(ErrorStatus.NOT_FOUND_RESERVEIST);
-        }
-    }
-
-    public void updateReserveNumberPlus(LessonRequest.reserve request) {
-        lessonMapper.updateReserveNumberPlus(request);
-    }
 }

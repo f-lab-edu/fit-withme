@@ -15,7 +15,7 @@ import java.util.Map;
 @Repository
 public interface LessonMapper {
 
-    List<Lesson> findLessons(String selectDate, String day);
+    List<Lesson> findAllLesson(String selectDate, String day);
 
     Lesson findLessonById(Long lessonId);
 
@@ -29,11 +29,8 @@ public interface LessonMapper {
 
     int deleteReserve(int reserveId);
 
-    List<Reserve> findReservesByUserIdAndDate(LessonRequest.reserveList reserveList);
+    List<Reserve> findAllReserveByUserIdAndDate(LessonRequest.reserveList reserveList);
 
     Lesson findLessonDetailsByLessonId(String lessonId);
 
-    int findCurrentPersonnel(LessonRequest.reserveList reserveList);
-
-    void updateReserveNumberPlus(LessonRequest.reserve request);
 }
