@@ -37,22 +37,6 @@ public class LessonDao {
         }
     }
 
-    public String findCenterByLessonId(Long lessonId) {
-        try {
-            return lessonMapper.findCenterByLessonId(lessonId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new BadRequestException(ErrorStatus.NOT_FOUND_LESSON);
-        }
-    }
-
-    public String findInstructorByLessonId(Long lessonId) {
-        try {
-            return lessonMapper.findInstructorByLessonId(lessonId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new BadRequestException(ErrorStatus.NOT_FOUND_LESSON);
-        }
-    }
-
     public int countCurrentPersonnel(LessonRequest.detail request) {
         try {
             return lessonMapper.countCurrentPersonnel(request);
@@ -79,7 +63,7 @@ public class LessonDao {
         }
     }
 
-    public Lesson findLessonDetailsByLessonId(String lessonId) {
+    public Lesson findLessonDetailsByLessonId(Long lessonId) {
         try {
             return lessonMapper.findLessonDetailsByLessonId(lessonId);
         } catch (EmptyResultDataAccessException e) {

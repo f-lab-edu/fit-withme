@@ -21,36 +21,16 @@
 
     <select id="findLessonById" parameterType="java.lang.Long" resultType="com.example.fitwithme.domain.model.Lesson">
         SELECT
-            LESSON_ID,
-            CENTER_ID,
-            LESSON_NAME,
-            INSTRUCTOR_ID,
-            PERSONNEL,
-            LESSON_DAY,
-            START_TIME,
-            END_TIME
+            L.LESSON_ID,
+            (SELECT CONCAT(C.CENTER_NAME, ' ', C.CENTER_LOCATION, '점') FROM CENTER C WHERE C.CENTER_ID = L.CENTER_ID) AS CENTER,
+            L.LESSON_NAME,
+            (SELECT I.INSTRUCTOR_NAME FROM INSTRUCTOR I WHERE I.INSTRUCTOR_ID = L.INSTRUCTOR_ID) AS INSTRUCTOR_NAME,
+            L.PERSONNEL,
+            L.LESSON_DAY,
+            L.START_TIME,
+            L.END_TIME
         FROM
-            LESSON
-        WHERE
-            LESSON_ID = #{lessonId}
-    </select>
-
-    <select id="findCenterByLessonId" parameterType="java.lang.Long" resultType="java.lang.String">
-        SELECT
-            CONCAT(C.CENTER_NAME, ' ', C.CENTER_LOCATION, '점') AS CENTER
-        FROM
-            CENTER C
-        JOIN LESSON L ON C.CENTER_ID = L.CENTER_ID
-        WHERE
-            L.LESSON_ID = #{lessonId}
-    </select>
-
-    <select id="findInstructorByLessonId" parameterType="java.lang.Long" resultType="java.lang.String">
-        SELECT
-            I.INSTRUCTOR_NAME
-        FROM
-            INSTRUCTOR I
-        JOIN LESSON L ON I.INSTRUCTOR_ID = L.INSTRUCTOR_ID
+            LESSON L
         WHERE
             L.LESSON_ID = #{lessonId}
     </select>
@@ -97,7 +77,7 @@
             USER_ID,
             RESERVE_DATE,
             LESSON_ID,
-            (SELECT COUNT(*) FROM RESERVE R WHERE R.LESSON_ID = RESERVE.LESSON_ID AND R.RESERVE_DATE = #{selectDate} AND R.CANCELED = 0) AS CURRENT_PERSONNEL
+            (SELECT COUNT(*) FROM RESERVE R WHERE R.LESSON_ID = RESERVE.LESSON_ID AND R.RESERVE_DATE = #{today} AND R.CANCELED = 0) AS CURRENT_PERSONNEL
         FROM
             RESERVE
         WHERE

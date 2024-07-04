@@ -44,15 +44,13 @@ public class LessonService {
         Long lessonId = request.getLessonId();
 
         Lesson lessonBase = lessonDao.findLessonById(lessonId);
-        String center = lessonDao.findCenterByLessonId(lessonId);
-        String instructorName = lessonDao.findInstructorByLessonId(lessonId);
         int currentPersonnel = lessonDao.countCurrentPersonnel(request);
 
         return Lesson.builder()
                 .lessonId(lessonBase.lessonId())
-                .center(center)
+                .center(lessonBase.center())
                 .lessonName(lessonBase.lessonName())
-                .instructorName(instructorName)
+                .instructorName(lessonBase.instructorName())
                 .currentPersonnel(currentPersonnel)
                 .personnel(lessonBase.personnel())
                 .lessonDay(lessonBase.lessonDay())

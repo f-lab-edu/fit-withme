@@ -19,10 +19,6 @@ public interface LessonMapper {
 
     Lesson findLessonById(Long lessonId);
 
-    String findCenterByLessonId(Long lessonId);
-
-    String findInstructorByLessonId(Long lessonId);
-
     int countCurrentPersonnel(LessonRequest.detail request);
 
     Long create(LessonRequest.reserve request);
@@ -31,6 +27,6 @@ public interface LessonMapper {
 
     List<Reserve> findAllReserveByUserIdAndDate(LessonRequest.reserveList reserveList);
 
-    Lesson findLessonDetailsByLessonId(String lessonId);
+    Lesson findLessonDetailsByLessonId(Long lessonId);
 
 }
