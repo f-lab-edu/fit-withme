@@ -10,15 +10,14 @@ import java.util.Date;
 
 @Component
 public class JwtUtil {
+    @Value("${jwt.secret}")
     private String secretKey;
-    private long accessTokenValidity;
-    private long refreshTokenValidity;
 
-    public JwtUtil(@Value("${jwt.secret}") String secretKey, @Value("${jwt.accessTokenValidity}") long accessTokenValidity, @Value("${jwt.refreshTokenValidity}")long refreshTokenValidity) {
-        this.secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
-        this.accessTokenValidity = accessTokenValidity;
-        this.refreshTokenValidity = refreshTokenValidity;
-    }
+    @Value("${jwt.accessTokenValidity}")
+    private long accessTokenValidity;
+
+    @Value("${jwt.refreshTokenValidity}")
+    private long refreshTokenValidity;
 
     public UserResponse.tokenInfo generateTokens(String userId) {
         String accessToken = createAccessToken(userId);
@@ -84,5 +83,10 @@ public class JwtUtil {
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
+    }
+
+    public String getUserIdFromToken(String token) {
+        Claims claims = getClaimsFromToken(token);
+        return claims.get("userId", String.class);
     }
 }
