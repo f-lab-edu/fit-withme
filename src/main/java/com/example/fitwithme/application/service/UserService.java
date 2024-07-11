@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @Slf4j
@@ -19,7 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserService {
     private final UserDao userDao;
+
     private final JwtUtil jwtUtil;
+
+    private final S3ImageService s3ImageService;
 
     @Transactional
     public UserResponse.tokenInfo login(UserRequest.login loginRequest) {
@@ -51,5 +55,13 @@ public class UserService {
 
     public boolean isUserIdAvailable(String userId) {
         return !userDao.existsByUserId(userId);
+    }
+
+    @Transactional
+    public String upload(String userId, MultipartFile image) {
+        String profileImage = s3ImageService.upload(image);
+        userDao.uploadProfile(userId, profileImage);
+
+        return userId;
     }
 }

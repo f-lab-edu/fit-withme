@@ -39,4 +39,8 @@ public class UserDao {
     public boolean existsByUserId(String userId) {
         return userMapper.existsByUserId(userId);
     }
+
+    public void uploadProfile(String userId, String profileImage) {
+        userMapper.uploadProfile(userId, profileImage);
+    }
 }
