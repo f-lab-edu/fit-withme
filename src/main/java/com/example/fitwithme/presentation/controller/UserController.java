@@ -19,8 +19,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/login")
     public ResponseEntity<UserResponse.tokenInfo> login(@Valid @RequestBody UserRequest.login userRequest) {
@@ -40,8 +39,8 @@ public class UserController {
         return ResponseEntity.ok(userName);
     }
 
-    @PostMapping("/Upload-profile")
-    public ResponseEntity<String> profileUpload(@RequestHeader("ACCESS_TOKEN") String accessToken, @RequestPart(value = "image", required = false) MultipartFile image){
+    @PostMapping("/upload-profile")
+    public ResponseEntity<String> uploadProfile(@RequestHeader("ACCESS_TOKEN") String accessToken, @RequestPart(value = "image", required = false) MultipartFile image){
         String userId = jwtUtil.getUserIdFromToken(accessToken);
         String profileImage = userService.upload(userId, image);
         return ResponseEntity.ok(profileImage);

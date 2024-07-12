@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.util.IOUtils;
+import com.example.fitwithme.common.enums.ImageExtension;
 import com.example.fitwithme.common.exception.S3ErrorStatus;
 import com.example.fitwithme.common.exception.S3Exception;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -34,7 +36,7 @@ public class S3ImageService {
     private String bucketName;
 
     public String upload(MultipartFile image) {
-        if(image.isEmpty() || Objects.isNull(image.getOriginalFilename())){
+        if (image.isEmpty() || Objects.isNull(image.getOriginalFilename())){
             throw new S3Exception(S3ErrorStatus.EMPTY_FILE_EXCEPTION);
         }
         return this.uploadImage(image);
@@ -56,7 +58,7 @@ public class S3ImageService {
         }
 
         String extension = filename.substring(lastDotIndex + 1).toLowerCase();
-        List<String> allowedExtensionList = Arrays.asList("jpg", "jpeg", "png", "gif");
+        List<ImageExtension> allowedExtensionList = Arrays.asList(ImageExtension.JPG, ImageExtension.JPEG, ImageExtension.PNG, ImageExtension.GIF);
 
         if (!allowedExtensionList.contains(extension)) {
             throw new S3Exception(S3ErrorStatus.INVALID_FILE_EXTENSION);
@@ -104,9 +106,9 @@ public class S3ImageService {
     private String getKeyFromImageAddress(String imageAddress){
         try{
             URL url = new URL(imageAddress);
-            String decodingKey = URLDecoder.decode(url.getPath(), "UTF-8");
+            String decodingKey = URLDecoder.decode(url.getPath(), StandardCharsets.UTF_8);
             return decodingKey.substring(1);
-        }catch (MalformedURLException | UnsupportedEncodingException e){
+        }catch (MalformedURLException e){
             throw new S3Exception(S3ErrorStatus.IO_EXCEPTION_ON_IMAGE_DELETE);
         }
     }

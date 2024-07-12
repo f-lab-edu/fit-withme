@@ -1,7 +1,6 @@
 package com.example.fitwithme.common.exception;
 
 public enum S3ErrorStatus {
-    OK("Success"),
     EMPTY_FILE_EXCEPTION("첨부된 이미지가 없습니다."),
     IO_EXCEPTION_ON_IMAGE_UPLOAD("IOException이 발생했습니다."),
     NO_FILE_EXTENSION("잘못된 파일 형식입니다."),
