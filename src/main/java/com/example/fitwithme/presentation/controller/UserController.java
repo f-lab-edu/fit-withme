@@ -1,6 +1,8 @@
 package com.example.fitwithme.presentation.controller;
 
 import com.example.fitwithme.application.service.UserService;
+import com.example.fitwithme.common.exception.BadRequestException;
+import com.example.fitwithme.common.exception.ErrorStatus;
 import com.example.fitwithme.jwt.JwtUtil;
 import com.example.fitwithme.presentation.dto.request.UserRequest;
 import com.example.fitwithme.presentation.dto.response.UserResponse;
@@ -44,6 +46,16 @@ public class UserController {
         String userId = jwtUtil.getUserIdFromToken(accessToken);
         String profileImage = userService.upload(userId, image);
         return ResponseEntity.ok(profileImage);
+    }
+
+    @PutMapping("/leave/{userId}")
+    public ResponseEntity<Integer> leave(@PathVariable int userId){
+        boolean isLeaved = userService.leave(userId);
+        if (isLeaved) {
+            return ResponseEntity.ok(userId);
+        } else {
+            throw new BadRequestException(ErrorStatus.LEAVE_FAIL);
+        }
     }
 
 }

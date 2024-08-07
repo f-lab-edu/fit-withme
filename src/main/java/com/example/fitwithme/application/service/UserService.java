@@ -64,4 +64,15 @@ public class UserService {
 
         return userId;
     }
+
+    @Transactional
+    public boolean leave(int userId) {
+        int result = userDao.deleteUser(userId);
+
+        if(result > 0){
+            return true;
+        }else {
+            return false;
+        }
+    }
 }

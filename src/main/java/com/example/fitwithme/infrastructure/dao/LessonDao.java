@@ -52,7 +52,7 @@ public class LessonDao {
     }
 
     public int deleteReserve(int reserveId) {
-        return lessonMapper.deleteReserve(reserveId);
+        return lessonMapper.cancel(reserveId);
     }
 
     public List<Reserve> findAllReserveByUserIdAndDate(LessonRequest.reserveList reserveList) {
