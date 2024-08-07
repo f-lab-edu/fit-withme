@@ -8,6 +8,7 @@ CREATE TABLE users (
     email   varchar(50)   NULL,
     phone   char(13)   NULL,
     leaved   bool   NULL,
+    image_url   varchar(200)   NULL,
 
     PRIMARY KEY (id)
 );

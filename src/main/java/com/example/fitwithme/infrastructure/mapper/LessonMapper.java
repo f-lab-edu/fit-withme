@@ -6,6 +6,7 @@ import com.example.fitwithme.domain.model.User;
 import com.example.fitwithme.presentation.dto.request.LessonRequest;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,7 +24,8 @@ public interface LessonMapper {
 
     Long create(LessonRequest.reserve request);
 
-    int deleteReserve(int reserveId);
+    @Update("UPDATE RESERVE SET CANCELED=1 WHERE RESERVE_ID=#{reserveId}")
+    int cancel(int reserveId);
 
     List<Reserve> findAllReserveByUserIdAndDate(LessonRequest.reserveList reserveList);
 

@@ -63,14 +63,6 @@
             )
     </insert>
 
-    <update id="cancel" parameterType="int">
-        UPDATE RESERVE
-        SET
-            CANCELED=1
-        WHERE
-            RESERVE_ID=#{reserveId}
-    </update>
-
     <select id="findAllReserveByUserIdAndDate" parameterType="com.example.fitwithme.presentation.dto.request.LessonRequest$reserveList" resultType="com.example.fitwithme.domain.model.Reserve">
         SELECT
             RESERVE_ID,

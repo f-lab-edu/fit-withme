@@ -30,10 +30,8 @@ import java.util.Map;
 @RequestMapping("/lessons")
 public class LessonController {
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
-    @Autowired
     private final LessonService lessonService;
 
     @GetMapping("/search/{selectDate}")
