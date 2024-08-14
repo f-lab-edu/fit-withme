@@ -21,6 +21,9 @@ public interface UserMapper {
     @Update("UPDATE users SET image_url = #{profileImage} WHERE user_id = #{userId}")
     void uploadProfile(String userId, String profileImage);
 
-    @Update("UPDATE USER SET LEAVED=1 WHERE USER_ID=#{userId}")
-    int deleteUser(int userId);
+    @Update("UPDATE users SET leaved=1 WHERE user_id=#{userId}")
+    int deleteUser(String userId);
+
+    int update(User user);
+
 }

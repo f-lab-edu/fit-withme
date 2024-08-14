@@ -44,7 +44,22 @@ public class UserDao {
         userMapper.uploadProfile(userId, profileImage);
     }
 
-    public int deleteUser(int userId) {
+    public int deleteUser(String userId) {
         return userMapper.deleteUser(userId);
     }
+
+    public User update(User user) {
+        try {
+            int result = userMapper.update(user);
+
+            if (result == 0) {
+                throw new BadRequestException(ErrorStatus.SIGNUP_FAIL);
+            }
+
+            return user;
+        } catch (DuplicateKeyException e) {
+            throw new BadRequestException(ErrorStatus.DUPLICATE_ID);
+        }
+    }
+
 }

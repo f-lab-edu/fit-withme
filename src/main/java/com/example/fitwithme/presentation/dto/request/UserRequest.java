@@ -29,6 +29,7 @@ public class UserRequest {
     @Getter
     @AllArgsConstructor
     public static class signUp {
+        private Long id;
 
         @NotBlank(message = "이름을 입력해주세요.")
         private String userName;
@@ -53,6 +54,38 @@ public class UserRequest {
             return User.builder()
                     .userName(this.userName)
                     .userId(this.userId)
+                    .userPassword(this.userPassword)
+                    .email(this.email)
+                    .phone(this.phone)
+                    .build();
+        }
+
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class update {
+        private Long id;
+
+        @NotBlank(message = "이름을 입력해주세요.")
+        private String userName;
+
+        @NotBlank(message = "비밀번호를 입력해주세요.")
+        @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}", message = "비밀번호는 영문 대,소문자와 숫자, 특수기호가 적어도 1개 이상씩 포함된 8 ~ 20자의 비밀번호여야 합니다.")
+        private String userPassword;
+
+        @NotBlank(message = "이메일을 입력해주세요.")
+        @Email(message = "이메일 형식이 아닙니다.")
+        private String email;
+
+        @NotBlank(message = "휴대전화를 입력해주세요.")
+        @Pattern (regexp = "^\\d{3}-\\d{3,4}-\\d{4}$", message = "휴대전화 형식이 아닙니다.")
+        private String phone;
+
+        public User toDomain() {
+            return User.builder()
+                    .id(this.id)
+                    .userName(this.userName)
                     .userPassword(this.userPassword)
                     .email(this.email)
                     .phone(this.phone)

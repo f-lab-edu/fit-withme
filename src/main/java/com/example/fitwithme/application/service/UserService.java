@@ -66,7 +66,18 @@ public class UserService {
     }
 
     @Transactional
-    public boolean leave(int userId) {
+    public String updateProfile(String userId, MultipartFile image) {
+        String imageUrl = userDao.findById(userId).imageUrl();
+        s3ImageService.deleteImageFromS3(imageUrl);
+
+        String profileImage = s3ImageService.upload(image);
+        userDao.uploadProfile(userId, profileImage);
+
+        return userId;
+    }
+
+    @Transactional
+    public boolean leave(String userId) {
         int result = userDao.deleteUser(userId);
 
         if(result > 0){
@@ -75,4 +86,27 @@ public class UserService {
             return false;
         }
     }
+
+    public User findUserDetail(String userId) {
+        User user = userDao.findById(userId);
+
+        return User.builder()
+                .id(user.id())
+                .userId(user.userId())
+                .userName(user.userName())
+                .email(user.email())
+                .phone(user.phone())
+                .imageUrl(user.imageUrl())
+                .build();
+    }
+
+    @Transactional
+    public String updateUserInfo(UserRequest.update userRequest) {
+
+        User user = userRequest.toDomain();
+        User result = userDao.update(user);
+
+        return result.userName();
+    }
+
 }
