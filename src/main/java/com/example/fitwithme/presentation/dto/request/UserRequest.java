@@ -82,6 +82,7 @@ public class UserRequest {
         @Pattern (regexp = "^\\d{3}-\\d{3,4}-\\d{4}$", message = "휴대전화 형식이 아닙니다.")
         private String phone;
 
+
         public User toDomain() {
             return User.builder()
                     .id(this.id)

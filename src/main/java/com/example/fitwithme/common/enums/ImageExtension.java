@@ -12,6 +12,10 @@ public enum ImageExtension {
 
     public String getImageExtension() { return imageExtension; }
 
+    public boolean matches(String ext) {
+        return this.imageExtension.equalsIgnoreCase(ext);
+    }
+
     @Override
     public String toString() {
         return this.imageExtension;
