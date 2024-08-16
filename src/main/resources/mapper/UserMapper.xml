@@ -23,4 +23,15 @@
         0
       )
   </insert>
+
+  <update id="update" parameterType="com.example.fitwithme.domain.model.User">
+    UPDATE users
+    SET
+        user_name=#{userName},
+        user_password=#{userPassword},
+        email=#{email},
+        phone=#{phone}
+    WHERE
+        id=#{id}
+  </update>
 </mapper>
