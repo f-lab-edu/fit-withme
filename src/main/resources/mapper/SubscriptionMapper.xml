@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.fitwithme.infrastructure.mapper.SubscriptionMapper">
+
+    <select id="findSubscription" parameterType="Long" resultType="com.example.fitwithme.domain.model.Subscription">
+        SELECT
+            subscription_id,
+            center_id,
+            (SELECT CONCAT(center_name, ' ', center_location, '점') FROM FITWITHME.CENTER WHERE CENTER_ID = 1) AS centerName,
+            subscription_name,
+            subscription_price,
+            use_month
+        FROM
+            subscription
+        where
+            center_id = #{centerId}
+    </select>
+
+
+</mapper>

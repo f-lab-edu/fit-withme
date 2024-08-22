@@ -11,7 +11,8 @@ public enum ErrorStatus {
     NOT_FOUND_LESSON("수업 정보를 찾을 수 없습니다."),
     NOT_FOUND_RESERVEIST("예약한 수업이 없습니다."),
     CANCEL_FAIL("예약 취소에 실패했습니다."),
-    LEAVE_FAIL("회원 탈퇴에 실패했습니다.");
+    LEAVE_FAIL("회원 탈퇴에 실패했습니다."),
+    NOT_FOUND_SUBSCRIPTION("구매 가능한 이용권이 없습니다.");
 
     private final String message;
 
