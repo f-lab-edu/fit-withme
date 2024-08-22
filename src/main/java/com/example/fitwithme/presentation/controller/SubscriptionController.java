@@ -27,5 +27,4 @@ public class SubscriptionController {
         List<Subscription> subscriptionList = subscriptionService.findSubscription(centerId);
         return ResponseEntity.ok(subscriptionList);
     }
-
 }
